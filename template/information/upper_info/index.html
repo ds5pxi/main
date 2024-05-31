@@ -1,0 +1,66 @@
+{% extends 'main.html' %}
+{% block title %}Document{% endblock %}
+{% block content %}
+    <h1 class="text-center mb-3" style="color:ivory; margin-top: 30px;">게시판</h1>
+    <div style="height: 480px;" >
+        <table class="table table-bordered border-primary text-center" style="width: 70%; margin: 0 auto;">
+            <thead>
+                <tr>
+                    <th>번호</th>
+                    <th>제목</th>
+                    <th>작성자</th>
+                    <th>조회수</th>
+                    <th>댓글수</th>
+                    <th>좋아요</th>
+                    <th>싫어요</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for value in upper_info %}   
+                    <tr>
+                        <td>{{ value.id }}</td>
+                        <td><a href='{% url "UI:D" value.id %}'><span class="d-inline-block text-truncate" style="max-width: 100px;">{{ value.제목 }}</span></a></td>
+                        <td>{{ value.작성자 }}</td>
+                        <td>{{ value.조회수 }}</td>
+                        <td>{{ value.댓글수 }}</td>
+                        <td>{{ value.좋아요 }}</td>
+                        <td>{{ value.싫어요 }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <ul class="pagination d-flex justify-content-center mt-5">
+        {% if upper_info.has_previous %}
+            <li class="page-item">
+                <a href="/upper_info/page/{{ upper_info.previous_page_number }}/" class="page-link">Previous</a>
+            </li>
+        {% else %}
+            <li class="page-item disabled">
+                <a href="" class="page-link">Previous</a>
+            </li>
+        {% endif %}
+        {% for i in page_num %}
+            {% if upper_info.number == i %}
+                <li class="page-item active"><a href="/upper_info/page/{{i}}/" class="page-link">{{i}}</a></li>    
+            {% else %}
+                <li class="page-item"><a href="/upper_info/page/{{i}}/" class="page-link">{{i}}</a></li>    
+            {% endif %}
+        {% endfor %}
+        {% if upper_info.has_next %}
+            <li class="page-item">
+                <a href="/upper_info/page/{{ upper_info.next_page_number }}/" class="page-link">Next</a>
+            </li>
+        {% else %}
+            <li class="page-item disabled">
+                <a href="" class="page-link">Next</a>
+            </li>
+        {% endif %}
+    </ul>
+    <div class="d-flex justify-content-center mt-5">
+        {% if user.is_active %}
+            <button type="button" class="btn btn-success btn-lg" onclick="document.location.href='/upper_info/add/'">글쓰기</button>
+        {% endif %}
+    </div>
+{% endblock %}

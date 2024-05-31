@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    index 페이지<br>
+    <ul>
+        {% for list in dirList %}
+            <li><a href='/updown/download/{{list}}'>{{ list }}</a></li>
+        {% endfor %}
+    </ul>
+    <ul>
+        {% for list in dirList %}
+            <li><a href='/updown/download/{{list}}'><img src='/updown/download/{{list}}'></a></li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
