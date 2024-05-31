@@ -209,23 +209,3 @@ def hate(request, workout_qId):
     workout_q.싫어요 = workout_q.싫어요 + 1
     workout_q.save()
     return redirect('WQ:D', workout_qId)
-
-
-def board(request):
-    query = request.GET.get('query', '')
-    search_by = request.GET.get('search_by', 'title')
-
-    if search_by == 'title':
-        workout_q = Workout_q .objects.filter(title__icontains=query)
-    elif search_by == 'author':
-        workout_q = Workout_q.objects.filter(author__username__icontains=query)
-    elif search_by == 'content':
-        workout_q = Workout_q.objects.filter(content__icontains=query)
-    else:
-        workout_q = Workout_q.objects.all()
-
-    context = {
-        'workout_q': workout_q,
-        'query': query,
-    }
-    return render(request, 'board.html', context)
