@@ -1,0 +1,136 @@
+.navbar-brand {
+    font-size: 20px;
+  }
+  
+  .navbar ul, .navbar li {
+    margin: 0;
+    padding: 0;
+  }
+  .navbar li:hover a {
+    transition: all 0.25s ease;
+  }
+  .dropdown-menu {
+    display: none;
+    position: absolute;
+  }
+  .nav-item.dropdown:hover .dropdown-menu {
+    display: block;
+  }
+  .dropdown-menu .dropdown-menu {
+    display: none;
+    position: absolute;
+    left: 100%;
+    top: 0;
+  }
+  .dropdown-menu li:hover .dropdown-menu {
+    display: block;
+  }
+  .main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80vh;
+    text-align: center;
+    color: red;
+  }
+  .animation {
+    font-size: 3em;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+  @keyframes backgroundChange {
+    0% { background-image: url('{% static "menu1/health1.png" %}'); }
+    50% { background-image: url('{% static "menu1/health1.png" %}'); }
+    100% { background-image: url('{% static "menu1/health1.png" %}'); }
+  }
+
+  .main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    text-align: center;
+    color: #fff;
+    background-color: rgba(0, 0, 0, 0.5); /* Optional: to make text more readable */
+    padding: 20px;
+    box-sizing: border-box;
+  }
+
+  .text-container {
+    font-size: 3em;
+    font-weight: bold;
+  }
+
+  .text-container div {
+    opacity: 0;
+    animation: fadeIn 2s forwards;
+  }
+
+  .text-container div:nth-child(1) {
+    animation-delay: 0s;
+  }
+
+  .text-container div:nth-child(2) {
+    animation-delay: 2s;
+  }
+
+  .text-container div:nth-child(3) {
+    animation-delay: 4s;
+  }
+
+  .text-container div:nth-child(4) {
+    animation-delay: 6s;
+  }
+
+  .text-container div:nth-child(5) {
+    animation-delay: 8s;
+  }
+
+  .text-container div:nth-child(6) {
+    animation-delay: 10s;
+  }
+
+  @keyframes fadeIn {
+    to {
+      opacity: 1;
+    }
+  }
+  .animated-text:nth-child(1) {
+    animation-delay: 0s;
+}
+
+.animated-text:nth-child(2) {
+    animation-delay: 4s;
+}
+
+.animated-text:nth-child(3) {
+    animation-delay: 8s;
+}
+
+.animated-text:nth-child(4) {
+    animation-delay: 12s;
+}
+
+@keyframes fadeInOut {
+    0%, 25% {
+        opacity: 0;
+    }
+    5%, 20% {
+        opacity: 1;
+    }
+    30%, 50% {
+        opacity: 0;
+    }
+    35%, 45% {
+        opacity: 1;
+    }
+    55%, 75% {
+        opacity: 0;
+    }
+    60%, 70% {
+        opacity: 1;
+    }
+    80%, 100% {
+        opacity: 1;
+    }
+}

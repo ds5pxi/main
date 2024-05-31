@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        if ('{{ msg }}'.length > 0) {
+            alert('{{ msg }}');
+        }
+
+        function changePwdBtn(btn){
+            changePwd = document.getElementById("changePwd");
+            
+            if (document.querySelector('#changePwd th')) {
+                changePwd.removeChild(th);
+                changePwd.removeChild(td);
+                btn.innerText = "비밀번호 변경 창 열기";
+                return;
+            }
+
+            btn.innerText = "비밀번호 변경 창 닫기";
+            th = document.createElement("th");
+            th.innerText = "변경할 암호";
+            td = document.createElement("td");
+            td.innerHTML = "<input type='password' name='password'>";
+
+            changePwd.append(th)
+            changePwd.append(td)
+        }
+    </script>
+
+</head>
+<body>
+    회원 수정 페이지.<br>
+    <form method="post">{% csrf_token %}
+        <table>
+            <tr>
+                <th>사용자 아이디</th>
+                <td><input type="text" name="username" value="{{ userInfo.username }}" disabled></td>
+            </tr>
+            <tr>
+                <th>기존 사용자 암호</th>
+                <td><input type="password" id="pw1" name="origin"></td>
+            </tr>
+            <tr>
+                <th colspan="2"><button type='button' onclick="changePwdBtn(this)">비밀번호 변경창 열기</button></th>
+            </tr>
+            <tr id="changePwd">
+            </tr>
+            <tr>
+                <th>이름</th>
+                <td><input type="text" name="first_name" value="{{ userInfo.first_name }}"></td>
+            </tr>
+            <tr>
+                <th>성</th>
+                <td><input type="text" name="last_name" value="{{ userInfo.last_name }}"></td>
+            </tr>
+            <tr>
+                <th>이메일</th>
+                <td><input type="email" name="email" value="{{ userInfo.email }}"></td>
+            </tr>
+        </table>
+        <hr>
+        <input type="submit" value="회원수정">
+        <input type="reset" value="취소">
+        <input type="button" value="회원탈퇴" onclick="myinfoDel()">
+        <script>
+            function myinfoDel(){
+                location.href='{% url "delete" %}';
+            }
+        </script>
+    </form>
+</body>
+</html>

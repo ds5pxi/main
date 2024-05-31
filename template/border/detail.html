@@ -1,0 +1,87 @@
+{% extends 'main.html' %}
+{% block title %}상세페이지{% endblock %}
+{% block content %}
+<div>
+    <h3 class="text-center mb-4">게시판 상세 페이지</h3>
+    <table class="text-center table table-bordered border-primary w-50"
+         align="center">
+        <tr>
+            <th>제목</th>
+            <td>{{ border.제목 }}</td>
+        </tr>
+        <tr>
+            <th>수정일</th>
+            <td>{{ border.수정일 }}</td>
+        </tr>
+        <tr>
+            <th>내용</th>
+            <td><textarea class="form-control" style="resize:none" 
+                rows="10" disabled>{{ border.내용 }}</textarea></td>
+        </tr>
+        <tr>
+            <th class="align-middle">파일</th>
+            <td>
+                <ul class="list-group">
+                    {% for x in dirList %}
+                    <li class="list-group-item">
+                        <a href='/updown/download/{{border.id}}/{{x}}'>
+                            {{ x }}
+                        </a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                {% load static %}
+                <button type="button" onclick="location.href='/border/good/{{border.id}}/'">
+                    <img src='{% static "good.png" %}' width="50px"><br>
+                    {{ border.좋아요 }}
+                </button>
+                <button type="button" onclick="location.href='/border/hate/{{border.id}}/'">
+                    <img src='{% static "hate.png" %}' width="50px"><br>
+                    {{ border.싫어요 }}
+                </button>            
+            </td>
+        </tr>
+    </table>
+</div>
+<div>
+    <table class="table w-50" align="center">
+        {% for i in reply %}
+            <tr>
+                <td width="30%">{{ i.작성일 | date:'Y-m-d' }}</td>
+                <td width="40%">{{ i.내용 }}</td>
+                <td width="10%">{{ i.작성자 }}</td>
+                {% if user.username == i.작성자 %}
+                <td style="float:right;">
+                    <a href='/border/delreply/{{border.id}}/{{i.id}}' 
+                    style="text-decoration: none;">
+                    <button class="btn btn-danger btn-sm">삭제</button></a></td>
+                {% endif %}
+            </tr>
+        {% endfor %}
+    </table>
+
+    <div class="text-center">
+        <form action="/border/addreply/{{ border.id }}/">
+            <legend>
+            <span style="width:10%;display: inline-block;">댓글 </span>
+            <input type="text" name="reply" class="form-control" style="width:30%;display: inline-block;"> 
+            <button type="submit" class="btn btn-success" style="margin-left: 10px;">등록</button>
+            </legend>
+        </form>
+    </div>
+    <div class="d-flex justify-content-center" style="clear:both;">
+        {% if user.username == border.작성자 %}
+        <button type='button' class="btn btn-success btn-lg mx-2"
+            onclick="document.location.href='/border/{{border.id}}/update/'">
+            수정</button>
+        <button type='button' class="btn btn-danger btn-lg  mx-2"
+            onclick="document.location.href='/border/{{border.id}}/delete/'">
+            삭제</button>
+        {% endif %}
+    </div>
+    </div>
+{% endblock %}
