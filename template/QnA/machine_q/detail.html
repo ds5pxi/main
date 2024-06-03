@@ -19,6 +19,12 @@
                 rows="10" disabled>{{ machine_q.내용 }}</textarea></td>
         </tr>
         <tr>
+            <th>유튜브</th>
+            <td>
+                <iframe id="player" width="320" height="180" src="" frameborder="0" allowfullscreen></iframe>
+            </td>
+        </tr>
+        <tr>
             <th class="align-middle">파일</th>
             <td>
                 <ul class="list-group">
@@ -84,4 +90,39 @@
         {% endif %}
     </div>
     </div>
+    <script>
+        var videoUrl = "{{ video.video_url }}";
+        var videoId = videoUrl.split('v=')[1];
+        var ampersandPosition = videoId.indexOf('&');
+        if (ampersandPosition != -1) {
+            videoId = videoId.substring(0, ampersandPosition);
+        }
+        document.getElementById('player').src = "https://www.youtube.com/embed/" + videoId;
+    
+        var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+        
+        var player;
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('player', {
+                events: {
+                    'onReady': onPlayerReady,
+                    'onStateChange': onPlayerStateChange
+                }
+            });
+        }
+        
+        function onPlayerReady(event) {
+            event.target.playVideo();
+        }
+        
+        function onPlayerStateChange(event) {
+            if (event.data == YT.PlayerState.ENDED) {
+                // Video playback ended
+            }
+        }
+    </script>
 {% endblock %}

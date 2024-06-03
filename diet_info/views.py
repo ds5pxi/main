@@ -1,4 +1,5 @@
-from django.shortcuts import render, redirect, HttpResponse
+from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
+from django.urls import reverse
 from diet_info.models import Diet_info, Reply
 from datetime import datetime
 from django.core.paginator import Paginator
@@ -47,6 +48,7 @@ def detail(request, diet_infoId):
     # diet_info.save()
     # diet_info.obejcts.values().get() : dict 형태
     if request.user.is_active :
+        video = get_object_or_404(Diet_info, pk=diet_infoId)
         diet_info = Diet_info.objects.values().get(id=diet_infoId);
         Diet_info.objects.filter(id=diet_infoId).update(조회수 = diet_info['조회수'] + 1)
         # get(id=고유번호)
@@ -60,6 +62,7 @@ def detail(request, diet_infoId):
                 'diet_info':diet_info,
                 'reply':reply,
                 'dirList':dirList,
+                'video':video,
             }
         except:
             content = {
@@ -84,6 +87,7 @@ def update(request, diet_infoId):
                     content = {
                         'diet_info':diet_info,
                         'dirList':dirList,
+                        'video': video,
                     }
                 except:
                     content = {
@@ -101,6 +105,7 @@ def update(request, diet_infoId):
     elif request.method == "POST":
         diet_info.제목 = request.POST.get('title');
         diet_info.내용 = request.POST.get('content');
+        diet_info.video_url = request.POST.get('video_url');
         diet_info.수정일 = datetime.now();
         diet_info.save()
 
@@ -135,6 +140,7 @@ def add(request):
         now = datetime.now()
         diet_info = Diet_info()
         diet_info.제목 = request.POST['title']
+        diet_info.video_url = request.POST.get('video_url')
         diet_info.내용 = request.POST.get("context");
         diet_info.작성자 = request.user.username;
         diet_info.작성일 = now

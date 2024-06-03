@@ -1,4 +1,5 @@
-from django.shortcuts import render, redirect, HttpResponse
+from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
+from django.urls import reverse
 from routine_info.models import Routine_info, Reply
 from datetime import datetime
 from django.core.paginator import Paginator
@@ -47,6 +48,7 @@ def detail(request, routine_infoId):
     # routine_info.save()
     # routine_info.obejcts.values().get() : dict 형태
     if request.user.is_active :
+        video = get_object_or_404(Routine_info, pk=routine_infoId)
         routine_info = Routine_info.objects.values().get(id=routine_infoId);
         Routine_info.objects.filter(id=routine_infoId).update(조회수 = routine_info['조회수'] + 1)
         # get(id=고유번호)
@@ -60,6 +62,7 @@ def detail(request, routine_infoId):
                 'routine_info':routine_info,
                 'reply':reply,
                 'dirList':dirList,
+                'video':video,
             }
         except:
             content = {
@@ -101,6 +104,7 @@ def update(request, routine_infoId):
     elif request.method == "POST":
         routine_info.제목 = request.POST.get('title');
         routine_info.내용 = request.POST.get('content');
+        routine_info.video_url = request.POST.get('video_url');
         routine_info.수정일 = datetime.now();
         routine_info.save()
 
@@ -135,6 +139,7 @@ def add(request):
         now = datetime.now()
         routine_info = Routine_info()
         routine_info.제목 = request.POST['title']
+        routine_info.video_url = request.POST.get('video_url')
         routine_info.내용 = request.POST.get("context");
         routine_info.작성자 = request.user.username;
         routine_info.작성일 = now

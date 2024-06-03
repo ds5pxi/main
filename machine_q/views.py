@@ -1,4 +1,5 @@
-from django.shortcuts import render, redirect, HttpResponse
+from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
+from django.urls import reverse
 from machine_q.models import Machine_q, Reply
 from datetime import datetime
 from django.core.paginator import Paginator
@@ -9,7 +10,19 @@ import shutil
 
 # Create your views here.
 def index(request, page):
-    machine_q = Machine_q.objects.all().order_by('-id')
+    query = request.GET.get('query', '')
+    search_by = request.GET.get('search_by', 'title')
+
+    if search_by == 'title':
+        machine_q = Machine_q.objects.filter(제목__icontains=query)
+    elif search_by == 'author':
+        machine_q = Machine_q.objects.filter(작성자__icontains=query)
+    elif search_by == 'content':
+        machine_q = Machine_q.objects.filter(내용__icontains=query)
+    else:
+        machine_q = Machine_q.objects.all()
+
+    machine_q = machine_q.order_by('-id')
     
     # Paginator(데이터, 분할할 데이터 수)
     paging = Paginator(machine_q, 10)
@@ -32,16 +45,21 @@ def index(request, page):
         content = {
             'machine_q':paging.page(page),
             'page_num':page_num,
+            'query': query,
+            'search_by': search_by,
         }
     except:
         content = {
             'machine_q':paging.page(paging.num_pages),
             'page_num':page_num,
+            'query': query,
+            'search_by': search_by,
         }
     return render(request, 'QnA/machine_q/index.html', content);
 
 def detail(request, machine_qId):
     if request.user.is_active :
+        video = get_object_or_404(Machine_q, pk=machine_qId)
         machine_q = Machine_q.objects.values().get(id=machine_qId);
         Machine_q.objects.filter(id=machine_qId).update(조회수 = machine_q['조회수'] + 1)
         reply = Reply.objects.filter(machine_q_id=machine_qId).values()
@@ -53,6 +71,7 @@ def detail(request, machine_qId):
                 'machine_q':machine_q,
                 'reply':reply,
                 'dirList':dirList,
+                'video': video,
             }
         except:
             content = {
@@ -94,6 +113,7 @@ def update(request, machine_qId):
     elif request.method == "POST":
         machine_q.제목 = request.POST.get('title');
         machine_q.내용 = request.POST.get('content');
+        machine_q.video_url = request.POST.get('video_url');
         machine_q.수정일 = datetime.now();
         machine_q.save()
 
@@ -128,6 +148,7 @@ def add(request):
         now = datetime.now()
         machine_q = Machine_q()
         machine_q.제목 = request.POST['title']
+        machine_q.video_url = request.POST.get('video_url')
         machine_q.내용 = request.POST.get("context");
         machine_q.작성자 = request.user.username;
         machine_q.작성일 = now

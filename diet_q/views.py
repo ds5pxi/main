@@ -1,4 +1,5 @@
-from django.shortcuts import render, redirect, HttpResponse
+from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
+from django.urls import reverse
 from diet_q.models import Diet_q, Reply
 from datetime import datetime
 from django.core.paginator import Paginator
@@ -9,7 +10,19 @@ import shutil
 
 # Create your views here.
 def index(request, page):
-    diet_q = Diet_q.objects.all().order_by('-id')
+    query = request.GET.get('query', '')
+    search_by = request.GET.get('search_by', 'title')
+
+    if search_by == 'title':
+        diet_q = Diet_q.objects.filter(제목__icontains=query)
+    elif search_by == 'author':
+        diet_q = Diet_q.objects.filter(작성자__icontains=query)
+    elif search_by == 'content':
+        diet_q = Diet_q.objects.filter(내용__icontains=query)
+    else:
+        diet_q = Diet_q.objects.all()
+
+    diet_q = diet_q.order_by('-id')
     
     # Paginator(데이터, 분할할 데이터 수)
     paging = Paginator(diet_q, 10)
@@ -32,11 +45,15 @@ def index(request, page):
         content = {
             'diet_q':paging.page(page),
             'page_num':page_num,
+            'query': query,
+            'search_by': search_by,
         }
     except:
         content = {
             'diet_q':paging.page(paging.num_pages),
             'page_num':page_num,
+            'query': query,
+            'search_by': search_by,
         }
     return render(request, 'QnA/diet_q/index.html', content);
 
@@ -47,6 +64,7 @@ def detail(request, diet_qId):
     # diet_q.save()
     # diet_q.obejcts.values().get() : dict 형태
     if request.user.is_active :
+        video = get_object_or_404(Diet_q, pk=diet_qId)
         diet_q = Diet_q.objects.values().get(id=diet_qId);
         Diet_q.objects.filter(id=diet_qId).update(조회수 = diet_q['조회수'] + 1)
         # get(id=고유번호)
@@ -60,6 +78,7 @@ def detail(request, diet_qId):
                 'diet_q':diet_q,
                 'reply':reply,
                 'dirList':dirList,
+                'video': video,
             }
         except:
             content = {
@@ -101,6 +120,7 @@ def update(request, diet_qId):
     elif request.method == "POST":
         diet_q.제목 = request.POST.get('title');
         diet_q.내용 = request.POST.get('content');
+        diet_q.video_url = request.POST.get('video_url');
         diet_q.수정일 = datetime.now();
         diet_q.save()
 
@@ -135,6 +155,7 @@ def add(request):
         now = datetime.now()
         diet_q = Diet_q()
         diet_q.제목 = request.POST['title']
+        diet_q.video_url = request.POST.get('video_url')
         diet_q.내용 = request.POST.get("context");
         diet_q.작성자 = request.user.username;
         diet_q.작성일 = now

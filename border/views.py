@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect, HttpResponse
+from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
 from border.models import Border, Reply
 from datetime import datetime
 from django.core.paginator import Paginator
@@ -6,6 +6,7 @@ from django.db.models import Max, Min, Avg, Sum
 import os
 from django.conf import settings
 import shutil
+from django.urls import reverse
 
 
 def index(request, page):
@@ -47,6 +48,7 @@ def detail(request, borderId):
     # border.save()
     # Border.obejcts.values().get() : dict 형태
     if request.user.is_active :
+        video = get_object_or_404(Border, pk=borderId)
         border = Border.objects.values().get(id=borderId);
         Border.objects.filter(id=borderId).update(조회수 = border['조회수'] + 1)
         # get(id=고유번호)
@@ -60,6 +62,7 @@ def detail(request, borderId):
                 'border':border,
                 'reply':reply,
                 'dirList':dirList,
+                'video': video,
             }
         except:
             content = {
@@ -101,6 +104,7 @@ def update(request, borderId):
     elif request.method == "POST":
         border.제목 = request.POST.get('title');
         border.내용 = request.POST.get('content');
+        border.video_url = request.POST.get('video_url')
         border.수정일 = datetime.now();
         border.save()
 
@@ -135,6 +139,7 @@ def add(request):
         now = datetime.now()
         border = Border()
         border.제목 = request.POST['title']
+        border.video_url = request.POST.get('video_url')
         border.내용 = request.POST.get("context");
         border.작성자 = request.user.username;
         border.작성일 = now

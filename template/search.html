@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .form-select-lg {
+            width: auto;
+            font-size: 1rem;
+        }
+        .form-control {
+            width: 300px;
+        }
+        .btn-primary {
+            white-space: nowrap;
+            font-size: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="d-flex justify-content-center mb-4">
+        <form method="get" action="" class="d-flex align-items-center">
+            <div class="me-2">
+                <select name="search_by" class="form-select form-select-lg" style="width: 150px;">
+                    <option value="title" {% if request.GET.search_by == 'title' %}selected{% endif %}>제목</option>
+                    <option value="author" {% if request.GET.search_by == 'author' %}selected{% endif %}>작성자</option>
+                    <option value="content" {% if request.GET.search_by == 'content' %}selected{% endif %}>내용</option>
+                </select>
+            </div>
+            <input type="text" name="query" class="form-control me-2" placeholder="검색어를 입력해주세요" value="{{ request.GET.query }}" style="width: 300px;">
+            <button type="submit" class="btn btn-primary btn-lg" style="white-space: nowrap;">검색</button>
+        </form>
+    </div>
+</body>
+</html>

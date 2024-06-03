@@ -1,4 +1,5 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
+from django.urls import reverse
 
 # Create your views here.
 from django.shortcuts import render, redirect, HttpResponse
@@ -50,6 +51,7 @@ def detail(request, running_else_infoId):
     # running_else_info.save()
     # running_else_info.obejcts.values().get() : dict 형태
     if request.user.is_active :
+        video = get_object_or_404(Running_else_info, pk=running_else_infoId)
         running_else_info = Running_else_info.objects.values().get(id=running_else_infoId);
         Running_else_info.objects.filter(id=running_else_infoId).update(조회수 = running_else_info['조회수'] + 1)
         # get(id=고유번호)
@@ -63,6 +65,7 @@ def detail(request, running_else_infoId):
                 'running_else_info':running_else_info,
                 'reply':reply,
                 'dirList':dirList,
+                'video': video,
             }
         except:
             content = {
@@ -104,6 +107,7 @@ def update(request, running_else_infoId):
     elif request.method == "POST":
         running_else_info.제목 = request.POST.get('title');
         running_else_info.내용 = request.POST.get('content');
+        running_else_info.video_url = request.POST.get('video_url');
         running_else_info.수정일 = datetime.now();
         running_else_info.save()
 
@@ -138,6 +142,7 @@ def add(request):
         now = datetime.now()
         running_else_info = Running_else_info()
         running_else_info.제목 = request.POST['title']
+        running_else_info.video_url = request.POST.get('video_url')
         running_else_info.내용 = request.POST.get("context");
         running_else_info.작성자 = request.user.username;
         running_else_info.작성일 = now

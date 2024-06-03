@@ -1,4 +1,5 @@
-from django.shortcuts import render, redirect, HttpResponse
+from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
+from django.urls import reverse
 from lower_info.models import Lower_info, Reply
 from datetime import datetime
 from django.core.paginator import Paginator
@@ -47,6 +48,7 @@ def detail(request, lower_infoId):
     # lower_info.save()
     # lower_info.obejcts.values().get() : dict 형태
     if request.user.is_active :
+        video = get_object_or_404(Lower_info, pk=lower_infoId)
         lower_info = Lower_info.objects.values().get(id=lower_infoId);
         Lower_info.objects.filter(id=lower_infoId).update(조회수 = lower_info['조회수'] + 1)
         # get(id=고유번호)
@@ -60,6 +62,7 @@ def detail(request, lower_infoId):
                 'lower_info':lower_info,
                 'reply':reply,
                 'dirList':dirList,
+                'video': video,
             }
         except:
             content = {
@@ -101,6 +104,7 @@ def update(request, lower_infoId):
     elif request.method == "POST":
         lower_info.제목 = request.POST.get('title');
         lower_info.내용 = request.POST.get('content');
+        lower_info.video_url = request.POST.get('video_url');
         lower_info.수정일 = datetime.now();
         lower_info.save()
 
@@ -135,6 +139,7 @@ def add(request):
         now = datetime.now()
         lower_info = Lower_info()
         lower_info.제목 = request.POST['title']
+        lower_info.video_url = request.POST.get('video_url')
         lower_info.내용 = request.POST.get("context");
         lower_info.작성자 = request.user.username;
         lower_info.작성일 = now
