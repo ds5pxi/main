@@ -9,8 +9,20 @@ import shutil
 
 # Create your views here.
 def index(request, page):
-    workout_q = Workout_q.objects.all().order_by('-id')
-    
+    query = request.GET.get('query', '')
+    search_by = request.GET.get('search_by', 'title')
+
+    if search_by == 'title':
+        workout_q = Workout_q.objects.filter(제목__icontains=query)
+    elif search_by == 'author':
+        workout_q = Workout_q.objects.filter(작성자__icontains=query)
+    elif search_by == 'content':
+        workout_q = Workout_q.objects.filter(내용__icontains=query)
+    else:
+        workout_q = Workout_q.objects.all()
+
+    workout_q = workout_q.order_by('-id')
+
     # Paginator(데이터, 분할할 데이터 수)
     paging = Paginator(workout_q, 10)
     
@@ -24,55 +36,52 @@ def index(request, page):
         first = max - 10
     elif first + 10 > paging.num_pages:
         max = paging.num_pages + 1
-    else :
+    else:
         max = first + 10
     page_num = range(first, max)
 
     try:
         content = {
-            'workout_q':paging.page(page),
-            'page_num':page_num,
+            'workout_q': paging.page(page),
+            'page_num': page_num,
+            'query': query,
+            'search_by': search_by,
         }
     except:
         content = {
-            'workout_q':paging.page(paging.num_pages),
-            'page_num':page_num,
+            'workout_q': paging.page(paging.num_pages),
+            'page_num': page_num,
+            'query': query,
+            'search_by': search_by,
         }
-    return render(request, 'QnA/workout_q/index.html', content);
+    return render(request, 'QnA/workout_q/index.html', content)
 
 def detail(request, workout_qId):
-    # workout_q.obejcts.get() : workout_q의 class 객체
-    # workout_q = workout_q.objects.get(id=workout_qId);
-    # workout_q.조회수 = workout_q.조회수 + 1;
-    # workout_q.save()
-    # workout_q.obejcts.values().get() : dict 형태
-    if request.user.is_active :
-        workout_q = Workout_q.objects.values().get(id=workout_qId);
-        Workout_q.objects.filter(id=workout_qId).update(조회수 = workout_q['조회수'] + 1)
-        # get(id=고유번호)
-        # filter(컬럼명 = 값)
+    if request.user.is_active:
+        workout_q = Workout_q.objects.values().get(id=workout_qId)
+        Workout_q.objects.filter(id=workout_qId).update(조회수=workout_q['조회수'] + 1)
         reply = Reply.objects.filter(workout_q_id=workout_qId).values()
-        
+
         try:
             dirList = os.listdir(settings.WORKOUT_Q_MEDIA_ROOT + "/" + str(workout_qId))
 
             content = {
-                'workout_q':workout_q,
-                'reply':reply,
-                'dirList':dirList,
+                'workout_q': workout_q,
+                'reply': reply,
+                'dirList': dirList,
             }
         except:
             content = {
-                'workout_q':workout_q,
-                'reply':reply,
+                'workout_q': workout_q,
+                'reply': reply,
             }
-        return render(request, 'QnA/workout_q/detail.html', content);
+        return render(request, 'QnA/workout_q/detail.html', content)
     else:
-        msg = "<script>";
+        msg = "<script>"
         msg += "alert('로그인 후 사용 가능합니다.');"
         msg += "location.href='/account/login/';"
         msg += "</script>"
-        return HttpResponse(msg);
+        return HttpResponse(msg)
 
 def update(request, workout_qId):
     workout_q = Workout_q.objects.get(id=workout_qId)
@@ -82,78 +91,70 @@ def update(request, workout_qId):
                 try:
                     dirList = os.listdir(settings.WORKOUT_Q_MEDIA_ROOT + "/" + str(workout_qId))
                     content = {
-                        'workout_q':workout_q,
-                        'dirList':dirList,
+                        'workout_q': workout_q,
+                        'dirList': dirList,
                     }
                 except:
                     content = {
-                        'workout_q':workout_q,
+                        'workout_q': workout_q,
                     }
-                return render(request, 'QnA/workout_q/update.html', content);
-            else :
+                return render(request, 'QnA/workout_q/update.html', content)
+            else:
                 msg = "<script>"
                 msg += "alert('접근할 수 없는 URL 입니다.');"
                 msg += "location.href='/workout_q/page/1';"
                 msg += "</script>"
-                return HttpResponse(msg);
-        else :
-            return render(request, 'error/errorAccess.html');
+                return HttpResponse(msg)
+        else:
+            return render(request, 'error/errorAccess.html')
     elif request.method == "POST":
-        workout_q.제목 = request.POST.get('title');
-        workout_q.내용 = request.POST.get('content');
-        workout_q.수정일 = datetime.now();
+        workout_q.제목 = request.POST.get('title')
+        workout_q.내용 = request.POST.get('content')
+        workout_q.수정일 = datetime.now()
         workout_q.save()
 
-        file_upload(request, workout_q.id);
+        file_upload(request, workout_q.id)
 
         msg = "<script>"
         msg += f"alert('{ workout_q.id }번 게시글이 수정되었습니다.');"
         msg += f"location.href='/workout_q/{ workout_q.id }/';"
         msg += "</script>"
-        return HttpResponse(msg);
+        return HttpResponse(msg)
 
 def delete(request, workout_qId):
-    # os.remove(파일삭제)
-    # os.rmdir(폴더삭제 - 빈폴더만 삭제가능)
     path = settings.WORKOUT_Q_MEDIA_ROOT + "/" + str(workout_qId) + "/"
     if os.path.isdir(path):
-        # dirList = os.listdir(path)
-        # for f in dirList:
-        #     os.remove(path + "/" + f)
-        # os.rmdir(path)
         shutil.rmtree(path)
 
     Workout_q.objects.get(id=workout_qId).delete()
     Reply.objects.filter(workout_q_id=workout_qId).delete()
     content = {
-        'workout_qId':workout_qId
+        'workout_qId': workout_qId
     }
-    return render(request, 'QnA/workout_q/delete.html', content);
+    return render(request, 'QnA/workout_q/delete.html', content)
 
 def add(request):
     if request.method == 'POST':
         now = datetime.now()
         workout_q = Workout_q()
         workout_q.제목 = request.POST['title']
-        workout_q.내용 = request.POST.get("context");
-        workout_q.작성자 = request.user.username;
+        workout_q.내용 = request.POST.get("context")
+        workout_q.작성자 = request.user.username
         workout_q.작성일 = now
         workout_q.수정일 = now
         workout_q.조회수 = request.POST['vcount']
         workout_q.save()
 
-        file_upload(request, workout_q.id);
+        file_upload(request, workout_q.id)
 
-        msg = "<script>";
-        msg += "alert('게시글이 저장되었습니다.');";
-        msg += f"location.href='/workout_q/{workout_q.id}/';";
-        msg += "</script>";
-        return HttpResponse(msg);
-        # return redirect('WQ', workout_q.id)
-        # return render(request, 'QnA/workout_q/detail.html')
-    else: # GET 방식
+        msg = "<script>"
+        msg += "alert('게시글이 저장되었습니다.');"
+        msg += f"location.href='/workout_q/{workout_q.id}/';"
+        msg += "</script>"
+        return HttpResponse(msg)
+    else:
         if request.user.is_active:
-            return render(request, 'QnA/workout_q/add.html');
+            return render(request, 'QnA/workout_q/add.html')
         else:
             msg = "<script>"
             msg += "alert('로그인 후 이용이 가능합니다.');"
@@ -161,31 +162,28 @@ def add(request):
             msg += "</script>"
             return HttpResponse(msg)
 
-
 def page(request, page):
     content = {
-        'page':page,
+        'page': page,
     }
-    return render(request, 'QnA/workout_q/page.html', content);
+    return render(request, 'QnA/workout_q/page.html', content)
 
 def addreply(request, workout_qId):
     reply = Reply()
-    reply.작성자 = request.user.username;
+    reply.작성자 = request.user.username
     reply.작성일 = datetime.now()
     reply.workout_q_id = workout_qId
     reply.내용 = request.GET['reply']
     reply.save()
-    Workout_q.objects.filter(id=workout_qId).update(댓글수 = Reply.objects.filter(workout_q_id=workout_qId).count())
+    Workout_q.objects.filter(id=workout_qId).update(댓글수=Reply.objects.filter(workout_q_id=workout_qId).count())
     return redirect('WQ:D', workout_qId)
 
 def delreply(request, workout_qId, replyId):
     Reply.objects.get(id=replyId).delete()
-    Workout_q.objects.filter(id=workout_qId).update(댓글수 = Reply.objects.filter(workout_q_id=workout_qId).count())
+    Workout_q.objects.filter(id=workout_qId).update(댓글수=Reply.objects.filter(workout_q_id=workout_qId).count())
     return redirect('WQ:D', workout_qId)
 
-
 def file_upload(request, workout_qId):
-    # 각 workout_q.id 의 이름으로 폴더 생성
     dirName = str(workout_qId)
     path = settings.WORKOUT_Q_MEDIA_ROOT + "/" + dirName + "/"
 
@@ -201,7 +199,6 @@ def good(request, workout_qId):
     workout_q = Workout_q.objects.get(id=workout_qId)
     workout_q.좋아요 = workout_q.좋아요 + 1
     workout_q.save()
-
     return redirect('WQ:D', workout_qId)
 
 def hate(request, workout_qId):
@@ -209,23 +206,3 @@ def hate(request, workout_qId):
     workout_q.싫어요 = workout_q.싫어요 + 1
     workout_q.save()
     return redirect('WQ:D', workout_qId)
-
-
-def board(request):
-    query = request.GET.get('query', '')
-    search_by = request.GET.get('search_by', 'title')
-
-    if search_by == 'title':
-        workout_q = Workout_q .objects.filter(title__icontains=query)
-    elif search_by == 'author':
-        workout_q = Workout_q.objects.filter(author__username__icontains=query)
-    elif search_by == 'content':
-        workout_q = Workout_q.objects.filter(content__icontains=query)
-    else:
-        workout_q = Workout_q.objects.all()
-
-    context = {
-        'workout_q': workout_q,
-        'query': query,
-    }
-    return render(request, 'board.html', context)

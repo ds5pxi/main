@@ -9,7 +9,19 @@ import shutil
 
 # Create your views here.
 def index(request, page):
-    diet_info = Diet_info.objects.all().order_by('-id')
+    query = request.GET.get('query', '')
+    search_by = request.GET.get('search_by', 'title')
+
+    if search_by == 'title':
+        diet_info = Diet_info.objects.filter(제목__icontains=query)
+    elif search_by == 'author':
+        diet_info = Diet_info.objects.filter(작성자__icontains=query)
+    elif search_by == 'content':
+        diet_info = Diet_info.objects.filter(내용__icontains=query)
+    else:
+        diet_info = Diet_info.objects.all()
+
+    diet_info = diet_info.order_by('-id')
     
     # Paginator(데이터, 분할할 데이터 수)
     paging = Paginator(diet_info, 10)

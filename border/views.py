@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect, HttpResponse
+from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
 from border.models import Border, Reply
 from datetime import datetime
 from django.core.paginator import Paginator
@@ -6,10 +6,23 @@ from django.db.models import Max, Min, Avg, Sum
 import os
 from django.conf import settings
 import shutil
+from django.urls import reverse
 
 
 def index(request, page):
-    border = Border.objects.all().order_by('-id')
+    query = request.GET.get('query', '')
+    search_by = request.GET.get('search_by', 'title')
+
+    if search_by == 'title':
+        border = Border.objects.filter(제목__icontains=query)
+    elif search_by == 'author':
+        border = Border.objects.filter(작성자__icontains=query)
+    elif search_by == 'content':
+        border = Border.objects.filter(내용__icontains=query)
+    else:
+        border = Border.objects.all()
+
+    border = border.order_by('-id')
     
     # Paginator(데이터, 분할할 데이터 수)
     paging = Paginator(border, 10)
@@ -47,6 +60,7 @@ def detail(request, borderId):
     # border.save()
     # Border.obejcts.values().get() : dict 형태
     if request.user.is_active :
+        video = get_object_or_404(Border, pk=borderId)
         border = Border.objects.values().get(id=borderId);
         Border.objects.filter(id=borderId).update(조회수 = border['조회수'] + 1)
         # get(id=고유번호)
@@ -60,6 +74,7 @@ def detail(request, borderId):
                 'border':border,
                 'reply':reply,
                 'dirList':dirList,
+                'video': video,
             }
         except:
             content = {
@@ -135,6 +150,7 @@ def add(request):
         now = datetime.now()
         border = Border()
         border.제목 = request.POST['title']
+        border.video_url = request.POST.get('video_url')
         border.내용 = request.POST.get("context");
         border.작성자 = request.user.username;
         border.작성일 = now
