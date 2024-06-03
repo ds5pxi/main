@@ -13,7 +13,19 @@ import shutil
 
 # Create your views here.
 def index(request, page):
-    running_else_info = Running_else_info.objects.all().order_by('-id')
+    query = request.GET.get('query', '')
+    search_by = request.GET.get('search_by', 'title')
+
+    if search_by == 'title':
+        running_else_info = Running_else_info.objects.filter(제목__icontains=query)
+    elif search_by == 'author':
+        running_else_info = Running_else_info.objects.filter(작성자__icontains=query)
+    elif search_by == 'content':
+        running_else_info = Running_else_info.objects.filter(내용__icontains=query)
+    else:
+        running_else_info = Running_else_info.objects.all()
+
+    running_else_info = running_else_info.order_by('-id')
     
     # Paginator(데이터, 분할할 데이터 수)
     paging = Paginator(running_else_info, 10)

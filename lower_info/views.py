@@ -10,7 +10,19 @@ import shutil
 
 # Create your views here.
 def index(request, page):
-    lower_info = Lower_info.objects.all().order_by('-id')
+    query = request.GET.get('query', '')
+    search_by = request.GET.get('search_by', 'title')
+
+    if search_by == 'title':
+        lower_info = Lower_info.objects.filter(제목__icontains=query)
+    elif search_by == 'author':
+        lower_info = Lower_info.objects.filter(작성자__icontains=query)
+    elif search_by == 'content':
+        lower_info = Lower_info.objects.filter(내용__icontains=query)
+    else:
+        lower_info = Lower_info.objects.all()
+
+    lower_info = lower_info.order_by('-id')
     
     # Paginator(데이터, 분할할 데이터 수)
     paging = Paginator(lower_info, 10)
