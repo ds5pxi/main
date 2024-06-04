@@ -1,23 +1,20 @@
 {% extends 'main.html' %}
 {% block title %}Document{% endblock %}
 {% block content %}
-    <h1 class="text-center mb-3" style="color:ivory; margin-top: 30px;">게시판</h1>
-    <div class="d-flex justify-content-center mb-4">
-        <form method="get" action="" class="d-flex">
-            <div class="me-2">
-                <select name="search_by" class="form-select">
-                    <option value="title">제목</option>
-                    <option value="author">작성자</option>
-                    <option value="content">내용</option>
-                </select>
-            </div>
-            <input type="text" name="query" class="form-control me-2" placeholder="검색어를 입력해주세요" value="{{ request.GET.query }}">
-            <button type="submit" class="btn btn-primary">검색</button>
-        </form>
-    </div>
-    <div style="height: 480px;" >
-        <table class="table table-bordered border-primary text-center" style="width: 70%; margin: 0 auto;">
-            <thead>
+<head>
+    {% load static %}
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'page.css' %}">
+</head>
+<div class="container mt-5" >
+    <div class="row">
+        <!-- Left side: 게시판 -->
+        <div class="col-md-6">
+    <h1 class="text-center mb-3" style="color:black; margin-top: 30px;">운동방법 Q&A</h1>
+    {% include 'search.html' %}
+    <div style="height: 480px;">
+        <table class="table table-bordered border-primary text-center" style="width: 100%; margin: 0 auto;">
+            <thead class="thead-dark">
                 <tr>
                     <th>번호</th>
                     <th>제목</th>
@@ -29,7 +26,7 @@
                 </tr>
             </thead>
             <tbody>
-                {% for value in workout_q %}   
+                {% for value in workout_q %}
                     <tr>
                         <td>{{ value.id }}</td>
                         <td><a href='{% url "WQ:D" value.id %}'><span class="d-inline-block text-truncate" style="max-width: 100px;">{{ value.제목 }}</span></a></td>
@@ -43,37 +40,59 @@
             </tbody>
         </table>
     </div>
-
     <ul class="pagination d-flex justify-content-center mt-5">
         {% if workout_q.has_previous %}
             <li class="page-item">
-                <a href="/workout_q/page/{{ workout_q.previous_page_number }}/" class="page-link">Previous</a>
+                <a href="?page={{ workout_q.previous_page_number }}&query={{ request.GET.query }}&search_by={{ request.GET.search_by }}" class="page-link">Previous</a>
             </li>
         {% else %}
             <li class="page-item disabled">
-                <a href="" class="page-link">Previous</a>
+                <a href="#" class="page-link">Previous</a>
             </li>
         {% endif %}
         {% for i in page_num %}
             {% if workout_q.number == i %}
-                <li class="page-item active"><a href="/workout_q/page/{{i}}/" class="page-link">{{i}}</a></li>    
+                <li class="page-item active"><a href="?page={{i}}&query={{ request.GET.query }}&search_by={{ request.GET.search_by }}" class="page-link">{{i}}</a></li>
             {% else %}
-                <li class="page-item"><a href="/workout_q/page/{{i}}/" class="page-link">{{i}}</a></li>    
+                <li class="page-item"><a href="?page={{i}}&query={{ request.GET.query }}&search_by={{ request.GET.search_by }}" class="page-link">{{i}}</a></li>
             {% endif %}
         {% endfor %}
         {% if workout_q.has_next %}
             <li class="page-item">
-                <a href="/workout_q/page/{{ workout_q.next_page_number }}/" class="page-link">Next</a>
+                <a href="?page={{ workout_q.next_page_number }}&query={{ request.GET.query }}&search_by={{ request.GET.search_by }}" class="page-link">Next</a>
             </li>
         {% else %}
             <li class="page-item disabled">
-                <a href="" class="page-link">Next</a>
+                <a href="#" class="page-link">Next</a>
             </li>
         {% endif %}
     </ul>
-    <div class="d-flex justify-content-center mt-5">
+    <div class="d-flex justify-content-center mt-1">
         {% if user.is_active %}
-            <button type="button" class="btn btn-success btn-lg" onclick="document.location.href='/workout_q/add/'">글쓰기</button>
+            <button type="button" class="btn btn-dark btn-lg" onclick="document.location.href='/workout_q/add/'">글쓰기</button>
         {% endif %}
     </div>
+</div>
+<!-- Right side: 사진 -->
+<div class="col-md-6 d-flex align-items-center justify-content-center">
+    <img src="{% static 'love.png' %}" alt="Image" class="img-fluid" style="width: 100%; max-width: 500px; height: auto;">
+</div>
+</div>
+</div>
+{% endblock %}
+
+{% block head %}
+<style>
+    .form-select-lg {
+        width: auto;
+        font-size: 1rem;
+    }
+    .form-control {
+        width: 300px;
+    }
+    .btn-primary {
+        white-space: nowrap;
+        font-size: 1rem;
+    }
+</style>
 {% endblock %}
