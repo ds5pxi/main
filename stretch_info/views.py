@@ -50,7 +50,7 @@ def index(request, page):
     stretch_info = stretch_info.order_by('-id')
     
     # Paginator(데이터, 분할할 데이터 수)
-    paging = Paginator(stretch_info, 10)
+    paging = Paginator(stretch_info, 8)
     
     str_page = str(page)
     # 맨 마지막 숫자

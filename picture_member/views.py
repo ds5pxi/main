@@ -75,7 +75,7 @@ def index(request, page):
     picture_member = picture_member.order_by('-id')
     
     # Paginator(데이터, 분할할 데이터 수)
-    paging = Paginator(picture_member, 10)
+    paging = Paginator(picture_member, 8)
     
     str_page = str(page)
     # 맨 마지막 숫자

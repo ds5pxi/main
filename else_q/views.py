@@ -49,7 +49,7 @@ def index(request, page):
     else_q = else_q.order_by('-id')
     
     # Paginator(데이터, 분할할 데이터 수)
-    paging = Paginator(else_q, 10)
+    paging = Paginator(else_q, 8)
     
     str_page = str(page)
     # 맨 마지막 숫자
