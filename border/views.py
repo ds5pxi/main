@@ -25,7 +25,7 @@ def index(request, page):
     border = border.order_by('-id')
     
     # Paginator(데이터, 분할할 데이터 수)
-    paging = Paginator(border, 10)
+    paging = Paginator(border, 8)
     
     str_page = str(page)
     # 맨 마지막 숫자

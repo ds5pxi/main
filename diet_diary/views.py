@@ -49,7 +49,7 @@ def index(request, page):
     diet_diary = diet_diary.order_by('-id')
     
     # Paginator(데이터, 분할할 데이터 수)
-    paging = Paginator(diet_diary, 10)
+    paging = Paginator(diet_diary, 8)
     
     str_page = str(page)
     # 맨 마지막 숫자

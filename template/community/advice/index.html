@@ -43,7 +43,7 @@
     <ul class="pagination d-flex justify-content-center mt-5">
         {% if advice.has_previous %}
             <li class="page-item">
-                <a href="?page={{ advice.previous_page_number }}&query={{ request.GET.query }}&search_by={{ request.GET.search_by }}" class="page-link">Previous</a>
+                <a href="/advice/page/{{ advice.previous }}/" class="page-link">Previous</a>
             </li>
         {% else %}
             <li class="page-item disabled">
@@ -52,14 +52,14 @@
         {% endif %}
         {% for i in page_num %}
             {% if advice.number == i %}
-                <li class="page-item active"><a href="?page={{i}}&query={{ request.GET.query }}&search_by={{ request.GET.search_by }}" class="page-link">{{i}}</a></li>
+                <li class="page-item active"><a href="/advice/page/{{i}}/" class="page-link">{{i}}</a></li>
             {% else %}
-                <li class="page-item"><a href="?page={{i}}&query={{ request.GET.query }}&search_by={{ request.GET.search_by }}" class="page-link">{{i}}</a></li>
+                <li class="page-item"><a href="/advice/page/{{i}}/" class="page-link">{{i}}</a></li>
             {% endif %}
         {% endfor %}
         {% if advice.has_next %}
             <li class="page-item">
-                <a href="?page={{ advice.next_page_number }}&query={{ request.GET.query }}&search_by={{ request.GET.search_by }}" class="page-link">Next</a>
+                <a href="/advice/page/{{ advice.next_page_number }}/" class="page-link">Next</a>
             </li>
         {% else %}
             <li class="page-item disabled">
