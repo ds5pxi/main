@@ -123,7 +123,6 @@ def update(request, diet_infoId):
                     content = {
                         'diet_info':diet_info,
                         'dirList':dirList,
-                        'video': video,
                     }
                 except:
                     content = {
