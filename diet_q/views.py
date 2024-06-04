@@ -7,6 +7,30 @@ from django.db.models import Max, Min, Avg, Sum
 import os
 from django.conf import settings
 import shutil
+from urllib import parse
+
+# 파일 다운로드, 삭제
+def download(request, diet_qId, filename):
+    file_path = os.path.join(settings.DIET_Q_MEDIA_ROOT, diet_qId + "/" + filename)
+    
+    # exists() : 파일이 있으면 True 없으면 False
+    if os.path.exists(file_path):
+        readFile = open(file_path, 'rb')
+        response = HttpResponse(readFile.read())
+        response['Content-Disposition']='attachment;filename='+parse.quote(filename)
+        return response
+
+def deleteFile(request, diet_qId, filename):
+    path = diet_qId + "/" + filename
+    file_path = os.path.join(settings.DIET_Q_MEDIA_ROOT, path)
+    os.remove(file_path)
+
+    msg = "<script>"
+    msg += f"alert('{filename} 파일을 삭제했습니다.');"
+    msg += f"location.href='/diet_q/{diet_qId}/update/';";
+    msg += "</script>"
+
+    return HttpResponse(msg)
 
 # Create your views here.
 def index(request, page):
