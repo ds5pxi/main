@@ -1,11 +1,20 @@
 {% extends 'main.html' %}
 {% block title %}Document{% endblock %}
 {% block content %}
-    <h1 class="text-center mb-3" style="color:ivory; margin-top: 30px;">하체운동 정보 게시판</h1>
+<head>
+    {% load static %}
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'page.css' %}">
+</head>
+<div class="container mt-5" >
+    <div class="row">
+        <!-- Left side: 게시판 -->
+        <div class="col-md-6">
+    <h1 class="text-center mb-3" style="color:black; margin-top: 30px;">하체운동 정보</h1>
     {% include 'search.html' %}
-    <div style="height: 480px;" >
-        <table class="table table-bordered border-primary text-center" style="width: 70%; margin: 0 auto;">
-            <thead>
+    <div style="height: 480px;">
+        <table class="table table-bordered border-primary text-center" style="width: 100%; margin: 0 auto;">
+            <thead class="thead-dark">
                 <tr>
                     <th>번호</th>
                     <th>제목</th>
@@ -17,7 +26,7 @@
                 </tr>
             </thead>
             <tbody>
-                {% for value in lower_info %}   
+                {% for value in lower_info %}
                     <tr>
                         <td>{{ value.id }}</td>
                         <td><a href='{% url "LI:D" value.id %}'><span class="d-inline-block text-truncate" style="max-width: 100px;">{{ value.제목 }}</span></a></td>
@@ -31,37 +40,59 @@
             </tbody>
         </table>
     </div>
-
     <ul class="pagination d-flex justify-content-center mt-5">
         {% if lower_info.has_previous %}
             <li class="page-item">
-                <a href="/lower_info/page/{{ lower_info.previous_page_number }}/" class="page-link">Previous</a>
+                <a href="?page={{ lower_info.previous_page_number }}&query={{ request.GET.query }}&search_by={{ request.GET.search_by }}" class="page-link">Previous</a>
             </li>
         {% else %}
             <li class="page-item disabled">
-                <a href="" class="page-link">Previous</a>
+                <a href="#" class="page-link">Previous</a>
             </li>
         {% endif %}
         {% for i in page_num %}
             {% if lower_info.number == i %}
-                <li class="page-item active"><a href="/lower_info/page/{{i}}/" class="page-link">{{i}}</a></li>    
+                <li class="page-item active"><a href="?page={{i}}&query={{ request.GET.query }}&search_by={{ request.GET.search_by }}" class="page-link">{{i}}</a></li>
             {% else %}
-                <li class="page-item"><a href="/lower_info/page/{{i}}/" class="page-link">{{i}}</a></li>    
+                <li class="page-item"><a href="?page={{i}}&query={{ request.GET.query }}&search_by={{ request.GET.search_by }}" class="page-link">{{i}}</a></li>
             {% endif %}
         {% endfor %}
         {% if lower_info.has_next %}
             <li class="page-item">
-                <a href="/lower_info/page/{{ lower_info.next_page_number }}/" class="page-link">Next</a>
+                <a href="?page={{ lower_info.next_page_number }}&query={{ request.GET.query }}&search_by={{ request.GET.search_by }}" class="page-link">Next</a>
             </li>
         {% else %}
             <li class="page-item disabled">
-                <a href="" class="page-link">Next</a>
+                <a href="#" class="page-link">Next</a>
             </li>
         {% endif %}
     </ul>
-    <div class="d-flex justify-content-center mt-5">
+    <div class="d-flex justify-content-center mt-1">
         {% if user.is_active %}
-            <button type="button" class="btn btn-success btn-lg" onclick="document.location.href='/lower_info/add/'">글쓰기</button>
+            <button type="button" class="btn btn-dark btn-lg" onclick="document.location.href='/lower_info/add/'">글쓰기</button>
         {% endif %}
     </div>
+</div>
+<!-- Right side: 사진 -->
+<div class="col-md-6 d-flex align-items-center justify-content-center">
+    <img src="{% static 'love.png' %}" alt="Image" class="img-fluid" style="width: 100%; max-width: 500px; height: auto;">
+</div>
+</div>
+</div>
+{% endblock %}
+
+{% block head %}
+<style>
+    .form-select-lg {
+        width: auto;
+        font-size: 1rem;
+    }
+    .form-control {
+        width: 300px;
+    }
+    .btn-primary {
+        white-space: nowrap;
+        font-size: 1rem;
+    }
+</style>
 {% endblock %}

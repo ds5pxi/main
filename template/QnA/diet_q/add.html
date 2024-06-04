@@ -1,6 +1,11 @@
 {% extends 'main.html' %}
 {% block title %}글쓰기창{% endblock %}
 {% block content %}
+<head>
+    {% load static %}
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'page.css' %}">
+</head>
     <h3 class="text-center mb-3">글쓰기창</h3>
     <form method="post" enctype="multipart/form-data"> {% csrf_token %}
         <table class="table table-bordered border-primary text-center" 
@@ -28,10 +33,13 @@
             </tr>
             <tr>
                 <td colspan="2">
-                    <button type="submit" class="btn btn-success btn-lg"
+                    <button type="submit" class="btn btn-secondary btn-lg"
                         style="width:120px;">저장</button>
-                    <button type="reset" class="btn btn-danger btn-lg" 
+                    <button type="reset" class="btn btn-secondary btn-lg" 
                         style="width:120px;">다시시작</button>
+                    <button type='button' class="btn btn-secondary btn-lg" style="width:120px;"
+                        onclick="document.location.href='/diet_q/page/1'">
+                        목록</button>
                 </td>
             </tr>
         </table>

@@ -1,6 +1,11 @@
 {% extends 'main.html' %}
 {% block title %}수정페이지{% endblock %}
 {% block content %}
+<head>
+    {% load static %}
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'page.css' %}">
+</head>
 <h3 class="text-center mb-4">게시판 수정 페이지</h3>
 <form method="post" enctype="multipart/form-data"> {% csrf_token %}
     <table class="text-center table table-bordered border-primary w-50"
@@ -38,8 +43,8 @@
         </tr>
     </table>
     <div class="d-flex justify-content-center">
-        <button type='submit' class="btn btn-success btn-lg mx-2">수정</button>
-        <button type='button' class="btn btn-danger btn-lg  mx-2"
+        <button type='submit' class="btn btn-secondary btn-lg mx-2">수정</button>
+        <button type='button' class="btn btn-secondary btn-lg  mx-2"
             onclick="document.location.href='/workout_diary/{{workout_diary.id}}'">
             취소</button>
     </div>

@@ -1,0 +1,28 @@
+
+
+body {
+    background-color: #f4f4f4;
+}
+h1 {
+    color: black;
+    margin-top: 30px;
+}
+.table {
+    background-color: #fff;
+    border-radius: 5px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.table th, .table td {
+    vertical-align: middle;
+}
+.pagination {
+    margin-top: 20px;
+}
+.btn-lg {
+    margin-top: 20px;
+}
+.table thead th {
+    height: 10px; 
+    font-size: 12px;
+}
