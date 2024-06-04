@@ -14,4 +14,6 @@ urlpatterns= [
     re_path(r'delreply/(\d+)/(\d+)/$', views.delreply),
     path('good/<adviceId>/', views.good),
     path('hate/<adviceId>/', views.hate),
+    re_path(r'download/(\d+)/([0-9a-zA-Zㄱ-힣 ()_.-]+)', views.download, name='download'),
+    path(r'delete/<adviceId>/<filename>/', views.deleteFile, name='delete'),
 ]

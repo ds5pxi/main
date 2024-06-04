@@ -7,6 +7,30 @@ import os
 from django.conf import settings
 import shutil
 from django.contrib import messages
+from urllib import parse
+
+# 파일 다운로드, 삭제
+def download(request, workout_diaryId, filename):
+    file_path = os.path.join(settings.WORKOUT_DIARY_MEDIA_ROOT, workout_diaryId + "/" + filename)
+    
+    # exists() : 파일이 있으면 True 없으면 False
+    if os.path.exists(file_path):
+        readFile = open(file_path, 'rb')
+        response = HttpResponse(readFile.read())
+        response['Content-Disposition']='attachment;filename='+parse.quote(filename)
+        return response
+
+def deleteFile(request, workout_diaryId, filename):
+    path = workout_diaryId + "/" + filename
+    file_path = os.path.join(settings.WORKOUT_DIARY_MEDIA_ROOT, path)
+    os.remove(file_path)
+
+    msg = "<script>"
+    msg += f"alert('{filename} 파일을 삭제했습니다.');"
+    msg += f"location.href='/workout_diary/{workout_diaryId}/update/';";
+    msg += "</script>"
+
+    return HttpResponse(msg)
 
 def get_queryset(request, self):
     search_keyword = self.request.GET.get('q', '')

@@ -6,10 +6,46 @@ from django.db.models import Max, Min, Avg, Sum
 import os
 from django.conf import settings
 import shutil
+from urllib import parse
+
+# 파일 다운로드, 삭제
+def download(request, center_qId, filename):
+    file_path = os.path.join(settings.CENTER_Q_MEDIA_ROOT, center_qId + "/" + filename)
+    
+    # exists() : 파일이 있으면 True 없으면 False
+    if os.path.exists(file_path):
+        readFile = open(file_path, 'rb')
+        response = HttpResponse(readFile.read())
+        response['Content-Disposition']='attachment;filename='+parse.quote(filename)
+        return response
+
+def deleteFile(request, center_qId, filename):
+    path = center_qId + "/" + filename
+    file_path = os.path.join(settings.CENTER_Q_MEDIA_ROOT, path)
+    os.remove(file_path)
+
+    msg = "<script>"
+    msg += f"alert('{filename} 파일을 삭제했습니다.');"
+    msg += f"location.href='/center_q/{center_qId}/update/';";
+    msg += "</script>"
+
+    return HttpResponse(msg)
 
 # Create your views here.
 def index(request, page):
-    center_q = Center_q.objects.all().order_by('-id')
+    query = request.GET.get('query', '')
+    search_by = request.GET.get('search_by', 'title')
+
+    if search_by == 'title':
+        center_q = Center_q.objects.filter(제목__icontains=query)
+    elif search_by == 'author':
+        center_q = Center_q.objects.filter(작성자__icontains=query)
+    elif search_by == 'content':
+        center_q = Center_q.objects.filter(내용__icontains=query)
+    else:
+        center_q = Center_q.objects.all()
+
+    center_q = center_q.order_by('-id')
     
     # Paginator(데이터, 분할할 데이터 수)
     paging = Paginator(center_q, 10)
@@ -32,11 +68,15 @@ def index(request, page):
         content = {
             'center_q':paging.page(page),
             'page_num':page_num,
+            'query': query,
+            'search_by': search_by,
         }
     except:
         content = {
             'center_q':paging.page(paging.num_pages),
             'page_num':page_num,
+            'query': query,
+            'search_by': search_by,
         }
     return render(request, 'QnA/center_q/index.html', content);
 

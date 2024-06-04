@@ -9,7 +9,19 @@ import shutil
 
 # Create your views here.
 def index(request, page):
-    diet_q = Diet_q.objects.all().order_by('-id')
+    query = request.GET.get('query', '')
+    search_by = request.GET.get('search_by', 'title')
+
+    if search_by == 'title':
+        diet_q = Diet_q.objects.filter(제목__icontains=query)
+    elif search_by == 'author':
+        diet_q = Diet_q.objects.filter(작성자__icontains=query)
+    elif search_by == 'content':
+        diet_q = Diet_q.objects.filter(내용__icontains=query)
+    else:
+        diet_q = Diet_q.objects.all()
+
+    diet_q = diet_q.order_by('-id')
     
     # Paginator(데이터, 분할할 데이터 수)
     paging = Paginator(diet_q, 10)
@@ -32,11 +44,15 @@ def index(request, page):
         content = {
             'diet_q':paging.page(page),
             'page_num':page_num,
+            'query': query,
+            'search_by': search_by,
         }
     except:
         content = {
             'diet_q':paging.page(paging.num_pages),
             'page_num':page_num,
+            'query': query,
+            'search_by': search_by,
         }
     return render(request, 'QnA/diet_q/index.html', content);
 

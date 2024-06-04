@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'main', 'border', 'diet_info', 'routine_info', 'stretch_info', 'upper_info',
     'lower_info',  'diet_diary', 'advice', 'running_else_info', 'workout_diary',
-    'picture_member', 'workout_q', 'center_q', 'diet_q', 'machine_q', 'else_q'
+    'picture_member', 'workout_q', 'center_q', 'diet_q', 'machine_q', 'else_q',
 ]
 
 MIDDLEWARE = [

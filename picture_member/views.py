@@ -7,7 +7,32 @@ import os
 from django.conf import settings
 import shutil
 from django.contrib import messages
+from urllib import parse
 
+# 파일 다운로드, 삭제
+def download(request, picture_memberId, filename):
+    file_path = os.path.join(settings.PICTURE_MEMBER_MEDIA_ROOT, picture_memberId + "/" + filename)
+    
+    # exists() : 파일이 있으면 True 없으면 False
+    if os.path.exists(file_path):
+        readFile = open(file_path, 'rb')
+        response = HttpResponse(readFile.read())
+        response['Content-Disposition']='attachment;filename='+parse.quote(filename)
+        return response
+
+def deleteFile(request, picture_memberId, filename):
+    path = picture_memberId + "/" + filename
+    file_path = os.path.join(settings.PICTURE_MEMBER_MEDIA_ROOT, path)
+    os.remove(file_path)
+
+    msg = "<script>"
+    msg += f"alert('{filename} 파일을 삭제했습니다.');"
+    msg += f"location.href='/picture_member/{picture_memberId}/update/';";
+    msg += "</script>"
+
+    return HttpResponse(msg)
+
+# 동영상
 def get_queryset(request, self):
     search_keyword = self.request.GET.get('q', '')
     search_type = self.request.GET.get('type', '')
@@ -139,6 +164,7 @@ def update(request, picture_memberId):
         return HttpResponse(msg);
 
 def delete(request, picture_memberId):
+    print('aaa')
     # os.remove(파일삭제)
     # os.rmdir(폴더삭제 - 빈폴더만 삭제가능)
     path = settings.PICTURE_MEMBER_MEDIA_ROOT + "/" + str(picture_memberId) + "/"

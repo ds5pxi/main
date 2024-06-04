@@ -27,7 +27,7 @@
                     <li class="list-group-item">{{ list }}
                     <button type='button' class="btn btn-secondary btn-sm" 
                         style="margin-left:30px;" 
-                        onclick="location.href='/updown/delete/{{routine_info.id}}/{{ list }}/'">
+                        onclick="location.href='/routine_info/delete/{{routine_info.id}}/{{ list }}/'">
                         삭제</button></li>
                     {% endfor %}
                     <li class="list-group-item">
@@ -40,7 +40,7 @@
     <div class="d-flex justify-content-center">
         <button type='submit' class="btn btn-success btn-lg mx-2">수정</button>
         <button type='button' class="btn btn-danger btn-lg  mx-2"
-            onclick="document.location.href='/routine_info/'">
+            onclick="document.location.href='/routine_info/{{routine_info.id}}'">
             취소</button>
     </div>
 </form>
