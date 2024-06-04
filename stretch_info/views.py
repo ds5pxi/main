@@ -1,4 +1,5 @@
-from django.shortcuts import render, redirect, HttpResponse
+from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
+from django.urls import reverse
 from stretch_info.models import Stretch_info, Reply
 from datetime import datetime
 from django.core.paginator import Paginator
@@ -34,7 +35,19 @@ def deleteFile(request, stretch_infoId, filename):
 
 # Create your views here.
 def index(request, page):
-    stretch_info = Stretch_info.objects.all().order_by('-id')
+    query = request.GET.get('query', '')
+    search_by = request.GET.get('search_by', 'title')
+
+    if search_by == 'title':
+        stretch_info = Stretch_info.objects.filter(제목__icontains=query)
+    elif search_by == 'author':
+        stretch_info = Stretch_info.objects.filter(작성자__icontains=query)
+    elif search_by == 'content':
+        stretch_info = Stretch_info.objects.filter(내용__icontains=query)
+    else:
+        stretch_info = Stretch_info.objects.all()
+
+    stretch_info = stretch_info.order_by('-id')
     
     # Paginator(데이터, 분할할 데이터 수)
     paging = Paginator(stretch_info, 10)
@@ -72,6 +85,7 @@ def detail(request, stretch_infoId):
     # stretch_info.save()
     # stretch_info.obejcts.values().get() : dict 형태
     if request.user.is_active :
+        video = get_object_or_404(Stretch_info, pk=stretch_infoId)
         stretch_info = Stretch_info.objects.values().get(id=stretch_infoId);
         Stretch_info.objects.filter(id=stretch_infoId).update(조회수 = stretch_info['조회수'] + 1)
         # get(id=고유번호)
@@ -85,6 +99,7 @@ def detail(request, stretch_infoId):
                 'stretch_info':stretch_info,
                 'reply':reply,
                 'dirList':dirList,
+                'video': video,
             }
         except:
             content = {
@@ -126,6 +141,7 @@ def update(request, stretch_infoId):
     elif request.method == "POST":
         stretch_info.제목 = request.POST.get('title');
         stretch_info.내용 = request.POST.get('content');
+        stretch_info.video_url = request.POST.get('video_url');
         stretch_info.수정일 = datetime.now();
         stretch_info.save()
 
@@ -160,6 +176,7 @@ def add(request):
         now = datetime.now()
         stretch_info = Stretch_info()
         stretch_info.제목 = request.POST['title']
+        stretch_info.video_url = request.POST.get('video_url')
         stretch_info.내용 = request.POST.get("context");
         stretch_info.작성자 = request.user.username;
         stretch_info.작성일 = now

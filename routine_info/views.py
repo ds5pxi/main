@@ -1,4 +1,5 @@
-from django.shortcuts import render, redirect, HttpResponse
+from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
+from django.urls import reverse
 from routine_info.models import Routine_info, Reply
 from datetime import datetime
 from django.core.paginator import Paginator
@@ -33,7 +34,19 @@ def deleteFile(request, routine_infoId, filename):
 
 # Create your views here.
 def index(request, page):
-    routine_info = Routine_info.objects.all().order_by('-id')
+    query = request.GET.get('query', '')
+    search_by = request.GET.get('search_by', 'title')
+
+    if search_by == 'title':
+        routine_info = Routine_info.objects.filter(제목__icontains=query)
+    elif search_by == 'author':
+        routine_info = Routine_info.objects.filter(작성자__icontains=query)
+    elif search_by == 'content':
+        routine_info = Routine_info.objects.filter(내용__icontains=query)
+    else:
+        routine_info = Routine_info.objects.all()
+
+    routine_info = routine_info.order_by('-id')
     
     # Paginator(데이터, 분할할 데이터 수)
     paging = Paginator(routine_info, 10)
@@ -71,6 +84,7 @@ def detail(request, routine_infoId):
     # routine_info.save()
     # routine_info.obejcts.values().get() : dict 형태
     if request.user.is_active :
+        video = get_object_or_404(Routine_info, pk=routine_infoId)
         routine_info = Routine_info.objects.values().get(id=routine_infoId);
         Routine_info.objects.filter(id=routine_infoId).update(조회수 = routine_info['조회수'] + 1)
         # get(id=고유번호)
@@ -84,6 +98,7 @@ def detail(request, routine_infoId):
                 'routine_info':routine_info,
                 'reply':reply,
                 'dirList':dirList,
+                'video':video,
             }
         except:
             content = {
@@ -125,6 +140,7 @@ def update(request, routine_infoId):
     elif request.method == "POST":
         routine_info.제목 = request.POST.get('title');
         routine_info.내용 = request.POST.get('content');
+        routine_info.video_url = request.POST.get('video_url');
         routine_info.수정일 = datetime.now();
         routine_info.save()
 
@@ -159,6 +175,7 @@ def add(request):
         now = datetime.now()
         routine_info = Routine_info()
         routine_info.제목 = request.POST['title']
+        routine_info.video_url = request.POST.get('video_url')
         routine_info.내용 = request.POST.get("context");
         routine_info.작성자 = request.user.username;
         routine_info.작성일 = now

@@ -1,8 +1,10 @@
 from django.db import models
+from django.utils import timezone
 
 # Create your models here.
 class Machine_q(models.Model):
     # 컬럼명 = 데이터자료형
+    video_url = models.URLField(default=timezone.now)
     제목 = models.CharField(max_length=255, blank=False, null=False)
     작성자 = models.CharField(max_length=255, blank=False, null=False)
     내용 = models.TextField(null=False)

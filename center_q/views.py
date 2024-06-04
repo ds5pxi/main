@@ -1,4 +1,5 @@
-from django.shortcuts import render, redirect, HttpResponse
+from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
+from django.urls import reverse
 from center_q.models import Center_q, Reply
 from datetime import datetime
 from django.core.paginator import Paginator
@@ -87,6 +88,7 @@ def detail(request, center_qId):
     # center_q.save()
     # Center_q.obejcts.values().get() : dict 형태
     if request.user.is_active :
+        video = get_object_or_404(Center_q, pk=center_qId)
         center_q = Center_q.objects.values().get(id=center_qId);
         Center_q.objects.filter(id=center_qId).update(조회수 = center_q['조회수'] + 1)
         # get(id=고유번호)
@@ -100,6 +102,7 @@ def detail(request, center_qId):
                 'center_q':center_q,
                 'reply':reply,
                 'dirList':dirList,
+                'video': video,
             }
         except:
             content = {
@@ -141,6 +144,7 @@ def update(request, center_qId):
     elif request.method == "POST":
         center_q.제목 = request.POST.get('title');
         center_q.내용 = request.POST.get('content');
+        center_q.video_url = request.POST.get('video_url');
         center_q.수정일 = datetime.now();
         center_q.save()
 
@@ -175,6 +179,7 @@ def add(request):
         now = datetime.now()
         center_q = Center_q()
         center_q.제목 = request.POST['title']
+        center_q.video_url = request.POST.get('video_url')
         center_q.내용 = request.POST.get("context");
         center_q.작성자 = request.user.username;
         center_q.작성일 = now

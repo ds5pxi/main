@@ -1,4 +1,5 @@
-from django.shortcuts import render, redirect, HttpResponse
+from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
+from django.urls import reverse
 from else_q.models import Else_q, Reply
 from datetime import datetime
 from django.core.paginator import Paginator
@@ -59,6 +60,7 @@ def index(request, page):
 def detail(request, else_qId):
 
     if request.user.is_active :
+        video = get_object_or_404(Else_q, pk=else_qId)
         else_q = Else_q.objects.values().get(id=else_qId);
         Else_q.objects.filter(id=else_qId).update(조회수 = else_q['조회수'] + 1)
         reply = Reply.objects.filter(else_q_id=else_qId).values()
@@ -70,6 +72,7 @@ def detail(request, else_qId):
                 'else_q':else_q,
                 'reply':reply,
                 'dirList':dirList,
+                'video': video,
             }
         except:
             content = {
@@ -111,6 +114,7 @@ def update(request, else_qId):
     elif request.method == "POST":
         else_q.제목 = request.POST.get('title');
         else_q.내용 = request.POST.get('content');
+        else_q.video_url = request.POST.get('video_url');
         else_q.수정일 = datetime.now();
         else_q.save()
 
@@ -145,6 +149,7 @@ def add(request):
         now = datetime.now()
         else_q = Else_q()
         else_q.제목 = request.POST['title']
+        else_q.video_url = request.POST.get('video_url')
         else_q.내용 = request.POST.get("context");
         else_q.작성자 = request.user.username;
         else_q.작성일 = now

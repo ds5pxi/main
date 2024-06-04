@@ -60,7 +60,19 @@ def get_queryset(request, self):
 
 # Create your views here.
 def index(request, page):
-    picture_member = Picture_member.objects.all().order_by('-id')
+    query = request.GET.get('query', '')
+    search_by = request.GET.get('search_by', 'title')
+
+    if search_by == 'title':
+        picture_member = Picture_member.objects.filter(제목__icontains=query)
+    elif search_by == 'author':
+        picture_member = Picture_member.objects.filter(작성자__icontains=query)
+    elif search_by == 'content':
+        picture_member = Picture_member.objects.filter(내용__icontains=query)
+    else:
+        picture_member = Picture_member.objects.all()
+
+    picture_member = picture_member.order_by('-id')
     
     # Paginator(데이터, 분할할 데이터 수)
     paging = Paginator(picture_member, 10)

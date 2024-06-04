@@ -10,7 +10,19 @@ from django.urls import reverse
 
 
 def index(request, page):
-    border = Border.objects.all().order_by('-id')
+    query = request.GET.get('query', '')
+    search_by = request.GET.get('search_by', 'title')
+
+    if search_by == 'title':
+        border = Border.objects.filter(제목__icontains=query)
+    elif search_by == 'author':
+        border = Border.objects.filter(작성자__icontains=query)
+    elif search_by == 'content':
+        border = Border.objects.filter(내용__icontains=query)
+    else:
+        border = Border.objects.all()
+
+    border = border.order_by('-id')
     
     # Paginator(데이터, 분할할 데이터 수)
     paging = Paginator(border, 10)
@@ -104,6 +116,7 @@ def update(request, borderId):
     elif request.method == "POST":
         border.제목 = request.POST.get('title');
         border.내용 = request.POST.get('content');
+        border.video_url = request.POST.get('video_url')
         border.수정일 = datetime.now();
         border.save()
 

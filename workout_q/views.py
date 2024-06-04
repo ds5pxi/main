@@ -1,4 +1,5 @@
-from django.shortcuts import render, redirect, HttpResponse
+from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
+from django.urls import reverse
 from workout_q.models import Workout_q, Reply
 from datetime import datetime
 from django.core.paginator import Paginator
@@ -58,6 +59,7 @@ def index(request, page):
 
 def detail(request, workout_qId):
     if request.user.is_active:
+        video = get_object_or_404(Workout_q, pk=workout_qId)
         workout_q = Workout_q.objects.values().get(id=workout_qId)
         Workout_q.objects.filter(id=workout_qId).update(조회수=workout_q['조회수'] + 1)
         reply = Reply.objects.filter(workout_q_id=workout_qId).values()
@@ -69,6 +71,7 @@ def detail(request, workout_qId):
                 'workout_q': workout_q,
                 'reply': reply,
                 'dirList': dirList,
+                'video': video,
             }
         except:
             content = {
@@ -110,6 +113,7 @@ def update(request, workout_qId):
     elif request.method == "POST":
         workout_q.제목 = request.POST.get('title')
         workout_q.내용 = request.POST.get('content')
+        workout_q.video_url = request.POST.get('video_url');
         workout_q.수정일 = datetime.now()
         workout_q.save()
 
@@ -138,6 +142,7 @@ def add(request):
         now = datetime.now()
         workout_q = Workout_q()
         workout_q.제목 = request.POST['title']
+        workout_q.video_url = request.POST.get('video_url')
         workout_q.내용 = request.POST.get("context")
         workout_q.작성자 = request.user.username
         workout_q.작성일 = now

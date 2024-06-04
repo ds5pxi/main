@@ -32,34 +32,21 @@ def deleteFile(request, workout_diaryId, filename):
 
     return HttpResponse(msg)
 
-def get_queryset(request, self):
-    search_keyword = self.request.GET.get('q', '')
-    search_type = self.request.GET.get('type', '')
-    notice_list = Workout_diary.objects.order_by('-id') 
-    
-    if search_keyword :
-        if len(search_keyword) > 1 :
-            if search_type == 'all':
-                search_notice_list = notice_list.filter(Q (title__icontains=search_keyword) | Q (content__icontains=search_keyword) | Q (writer__user_id__icontains=search_keyword))
-            elif search_type == 'title_content':
-                search_notice_list = notice_list.filter(Q (title__icontains=search_keyword) | Q (content__icontains=search_keyword))
-            elif search_type == 'title':
-                search_notice_list = notice_list.filter(title__icontains=search_keyword)    
-            elif search_type == 'content':
-                search_notice_list = notice_list.filter(content__icontains=search_keyword)    
-            elif search_type == 'writer':
-                search_notice_list = notice_list.filter(writer__user_id__icontains=search_keyword)
-
-            return search_notice_list
-        else:
-            messages.error(self.request, '검색어는 2글자 이상 입력해주세요.')
-    return notice_list
-    
-
-
 # Create your views here.
 def index(request, page):
-    workout_diary = Workout_diary.objects.all().order_by('-id')
+    query = request.GET.get('query', '')
+    search_by = request.GET.get('search_by', 'title')
+
+    if search_by == 'title':
+        workout_diary = Workout_diary.objects.filter(제목__icontains=query)
+    elif search_by == 'author':
+        workout_diary = Workout_diary.objects.filter(작성자__icontains=query)
+    elif search_by == 'content':
+        workout_diary = Workout_diary.objects.filter(내용__icontains=query)
+    else:
+        workout_diary = Workout_diary.objects.all()
+
+    workout_diary = workout_diary.order_by('-id')
     
     # Paginator(데이터, 분할할 데이터 수)
     paging = Paginator(workout_diary, 10)

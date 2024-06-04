@@ -1,4 +1,5 @@
-from django.shortcuts import render, redirect, HttpResponse
+from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
+from django.urls import reverse
 from machine_q.models import Machine_q, Reply
 from datetime import datetime
 from django.core.paginator import Paginator
@@ -58,6 +59,7 @@ def index(request, page):
 
 def detail(request, machine_qId):
     if request.user.is_active :
+        video = get_object_or_404(Machine_q, pk=machine_qId)
         machine_q = Machine_q.objects.values().get(id=machine_qId);
         Machine_q.objects.filter(id=machine_qId).update(조회수 = machine_q['조회수'] + 1)
         reply = Reply.objects.filter(machine_q_id=machine_qId).values()
@@ -69,6 +71,7 @@ def detail(request, machine_qId):
                 'machine_q':machine_q,
                 'reply':reply,
                 'dirList':dirList,
+                'video': video,
             }
         except:
             content = {
@@ -110,6 +113,7 @@ def update(request, machine_qId):
     elif request.method == "POST":
         machine_q.제목 = request.POST.get('title');
         machine_q.내용 = request.POST.get('content');
+        machine_q.video_url = request.POST.get('video_url');
         machine_q.수정일 = datetime.now();
         machine_q.save()
 
@@ -144,6 +148,7 @@ def add(request):
         now = datetime.now()
         machine_q = Machine_q()
         machine_q.제목 = request.POST['title']
+        machine_q.video_url = request.POST.get('video_url')
         machine_q.내용 = request.POST.get("context");
         machine_q.작성자 = request.user.username;
         machine_q.작성일 = now
