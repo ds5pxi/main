@@ -24,13 +24,13 @@
                 rows="10" disabled>{{ diet_diary.내용 }}</textarea></td>
         </tr>
         <tr>
-            <th class="align-middle">파일</th>
+            <th class="align-middle">이미지</th>
             <td>
                 <ul class="list-group">
                     {% for x in dirList %}
                     <li class="list-group-item">
                         <a href='/diet_diary/download/{{diet_diary.id}}/{{x}}'>
-                            {{ x }}
+                            <img src="/diet_diary/download/{{diet_diary.id}}/{{x}}" width="50%";>
                         </a>
                     </li>
                     {% endfor %}

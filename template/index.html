@@ -134,13 +134,34 @@
 </html>
 
 <body>
+    <div class="video-container">
+        <video id="backgroundVideo" class="background-video" src="{% static 'home.mp4' %}" autoplay muted loop></video>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var video = document.getElementById('backgroundVideo');
+            video.muted = false;
+            video.play().catch(function(error) {
+                console.log('Video play failed:', error);
+            });
+        });
+    </script>
+    <div class="text-overlay">
+        <div class="animated-text">No pain</div>
+        <div class="animated-text">No gain</div>
+        <div class="animated-text">JUST DO IT</div>
+        <div class="animated-text">NO PAIN NO GAIN JUST DO IT</div>
+    </div>
+</body>
+
+<!-- <body>
     <video id="myVideo" width="100%" height="100%" muted loop autoplay="autoplay">
         {% load static %}
         <source src="{% static 'home.mp4' %}" type="video/mp4">
         <a href="{% static 'home.mp4' %}"></a>
     </video>
 <script>
-    muted = false
+    muted = true
 </script>
 <div class="text-overlay">
     <div class="animated-text">No pain</div>
@@ -149,6 +170,6 @@
     <div class="animated-text">NO PAIN NO GAIN JUST DO IT</div>
 </div>
 
-</body>
+</body> -->
 
 </html>
