@@ -1,17 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <style>
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(255, 255, 255, 0.8);
+            /* Add some transparency to the background */
+            border-radius: 10px;
+            padding: 20px;
+            width: 20%;
+            margin: 0 auto;
+        }
+
+        .title {
+            padding: 30px 0;
+            text-transform: capitalize;
+            font-size: 25px;
+            font-family: 'Arial', sans-serif;
+        }
+    </style>
     <script>
         if ('{{ msg }}'.length > 0) {
             alert('{{ msg }}');
         }
 
-        function changePwdBtn(btn){
+        function changePwdBtn(btn) {
+            var changePwd = document.getElementById("changePwd");
+
+            if (document.querySelector('#changePwd .form-row')) {
+                changePwd.innerHTML = '';
+                btn.innerText = "비밀번호 변경 창 열기";
+                return;
+            }
+
+            btn.innerText = "비밀번호 변경 창 닫기";
+            var div = document.createElement("div");
+            div.className = "form-row";
+            div.innerHTML = '<input type="password" name="password" placeholder="변경할 암호">';
+            changePwd.appendChild(div);
+        }   
+    </script>
+    <!-- <script>
+        if ('{{ msg }}'.length > 0) {
+            alert('{{ msg }}');
+        }
+
+        function changePwdBtn(btn) {
             changePwd = document.getElementById("changePwd");
-            
+
             if (document.querySelector('#changePwd th')) {
                 changePwd.removeChild(th);
                 changePwd.removeChild(td);
@@ -28,48 +73,55 @@
             changePwd.append(th)
             changePwd.append(td)
         }
-    </script>
-
+    </script> -->
 </head>
+
 <body>
-    회원 수정 페이지.<br>
-    <form method="post">{% csrf_token %}
-        <table>
-            <tr>
-                <th>사용자 아이디</th>
-                <td><input type="text" name="username" value="{{ userInfo.username }}" disabled></td>
-            </tr>
-            <tr>
-                <th>기존 사용자 암호</th>
-                <td><input type="password" id="pw1" name="origin"></td>
-            </tr>
-            <tr>
-                <th colspan="2"><button type='button' onclick="changePwdBtn(this)">비밀번호 변경창 열기</button></th>
-            </tr>
-            <tr id="changePwd">
-            </tr>
-            <tr>
-                <th>이름</th>
-                <td><input type="text" name="first_name" value="{{ userInfo.first_name }}"></td>
-            </tr>
-            <tr>
-                <th>성</th>
-                <td><input type="text" name="last_name" value="{{ userInfo.last_name }}"></td>
-            </tr>
-            <tr>
-                <th>이메일</th>
-                <td><input type="email" name="email" value="{{ userInfo.email }}"></td>
-            </tr>
-        </table>
-        <hr>
-        <input type="submit" value="회원수정">
-        <input type="reset" value="취소">
-        <input type="button" value="회원탈퇴" onclick="myinfoDel()">
-        <script>
-            function myinfoDel(){
-                location.href='{% url "delete" %}';
-            }
-        </script>
-    </form>
+    <div class="container">
+        <div class="text" style="color: gray;">GYM motivation</div>
+        <div class="page">
+            <div class="title">Update Profile</div>
+            <form name="frm1" method="post">
+                {% csrf_token %}
+                <div class="form-row">
+                    <input type="text" name="username" placeholder="사용자 아이디" value="{{ userInfo.username }}" disabled>
+                </div>
+                <div class="form-row">
+                    <input type="password" id="pw1" name="origin" placeholder="기존 사용자 암호">
+                </div>
+                <div class="form-row">
+                    <input type="button" value="비밀번호 변경 창 열기" onclick="changePwdBtn(this)">
+                </div>
+                <div id="changePwd">
+                </div>
+                <div class="form-row">
+                    <input type="text" name="first_name" value="{{ userInfo.first_name }}" placeholder="이름">
+                </div>
+                <div class="form-row">
+                    <input type="text" name="last_name" value="{{ userInfo.last_name }}" placeholder="성">
+                </div>
+                <div class="form-row">
+                    <input type="email" name="email" value="{{ userInfo.email }}" placeholder="이메일">
+                </div>
+                <div class="form-row">
+                    <button type="submit" value="회원수정"
+                        style="width: 262px; height: 36px; margin-bottom: 15px; margin-top: 15px;">회원수정
+                    </button>
+                </div>
+                <div class="form-row">
+                    <input type="reset" value="도르마무">
+                </div>
+                <div class="form-row">
+                    <input type="button" value="회원탈퇴" onclick="myinfoDel()">
+                </div>
+            </form>
+            <script>
+                function myinfoDel() {
+                    location.href = '{% url "delete" %}';
+                }
+            </script>
+        </div>
+    </div>
 </body>
+
 </html>
