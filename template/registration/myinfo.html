@@ -4,10 +4,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>정보 수정 페이지</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'style.css' %}">
     <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            min-height: 100vh;
+            align-items: center;
+            justify-content: center;
+            background-size: cover;
+            background-image: url('{% static "해린.jpg" %}');
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+
         .container {
             display: flex;
             flex-direction: column;
@@ -38,6 +51,7 @@
             width: 48%;
             /* 두 버튼이 균등하게 배치되도록 설정 */
         }
+
         .form-row-inline a {
             width: 48%;
             /* 두 버튼이 균등하게 배치되도록 설정 */
@@ -128,7 +142,7 @@
                 </div>
                 <div class="form-row-inline">
                     <input type="reset" value="Dormammu">
-                    <a  href="/">
+                    <a href="/">
                         <input type="button" value="취소" style="width: 126px;">
                     </a>
                 </div>

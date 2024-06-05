@@ -3,25 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>인스타그램 로그인 홈페이지</title>
+    <title>로그인 홈페이지</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'style.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css">
     <style>
         /* Adjusted CSS styles with background image */
 
-body {
-    margin: 0;
-    padding: 0;
-    display: flex;
-    min-height: 100vh;
-    align-items: center;
-    justify-content: center;
-    background-image: url('https://image.fmkorea.com/files/attach/new3/20231229/2978469841/5358800295/6556893212/8ca97bdf7b5a6a72c955f781e3bd80be.jpg');
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
-}
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            min-height: 100vh;
+            align-items: center;
+            justify-content: center;
+            background-size: cover;
+            background-image: url('{% static "시대꺼.jpg" %}');
+            background-repeat: no-repeat;
+            background-position: center;
+        }
 
 .container {
     display: flex;
