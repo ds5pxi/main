@@ -1,108 +1,132 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link 
     <title>Document</title>
-    
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css">
     <style>
         /* Adjusted CSS styles to match the provided HTML */
 
-.container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-}
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            min-height: 100vh;
+            align-items: center;
+            justify-content: center;
+            background-image: url('https://image.fmkorea.com/files/attach/new3/20231229/2978469841/5358800295/6556893212/8ca97bdf7b5a6a72c955f781e3bd80be.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
 
-.text {
-    color: #fff;
-    margin: 10px;
-    letter-spacing: 1px;
-}
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(255, 255, 255, 0.8);
+            /* Add some transparency to the background */
+            border-radius: 10px;
+            padding: 20px;
+            width: 20%;
+            margin: 0 auto;
+        }
 
-.page {
-    width: 350px;
-    background: #fff;
-    border-radius: 5px;
-    padding-bottom: 15px;
-    margin-top: 20px;
-}
+        .text {
+            color: #fff;
+            margin: 10px;
+            letter-spacing: 1px;
+        }
 
-.title {
-    padding: 30px 0;
-    text-transform: capitalize;
-    font-size: 25px;
-    font-family: 'Pacifico', cursive;
-    text-align: center;
-}
+        .page {
+            width: 350px;
+            background: #fff;
+            border-radius: 5px;
+            padding-bottom: 15px;
+            margin-top: 20px;
+        }
 
-form {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    margin-top: 20px;
-}
+        .title {
+            padding: 30px 0;
+            text-transform: capitalize;
+            font-size: 25px;
+            font-family: 'Pacifico', cursive;
+            text-align: center;
+        }
 
-form input {
-    margin-bottom: 15px;
-    border: 1px solid rgba(0, 0, 0, 0.4);
-    border-radius: 3px;
-    outline: none;
-    width: 75%;
-    box-sizing: border-box;
-    height: 35px;
-    font-size: 17px;
-    padding: 0 10px;
-}
+        form {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-top: 20px;
+        }
 
-form input:focus {
-    border: 1px solid rgba(0, 0, 0, 0.7);
-    background: #efefef;
-}
+        form input {
+            margin-bottom: 15px;
+            border: 1px solid rgba(0, 0, 0, 0.4);
+            border-radius: 3px;
+            outline: none;
+            width: 100%;
+            box-sizing: border-box;
+            height: 35px;
+            font-size: 17px;
+            padding: 0 10px;
+        }
 
-input::placeholder {
-    font-weight: normal;
-    font-size: 13px;
-    transition: 0.3s ease;
-}
+        form input:focus {
+            border: 1px solid rgba(0, 0, 0, 0.7);
+            background: #efefef;
+        }
 
-input:focus::placeholder {
-    position: absolute;
-    font-size: 10px;
-    transform: translateY(-13px);
-}
+        input::placeholder {
+            font-weight: normal;
+            font-size: 13px;
+            transition: 0.3s ease;
+        }
 
-form button {
-    border: none;
-    background: #043fff;
-    padding: 10px 0;
-    margin-top: 10px;
-    color: #fff;
-    border-radius: 3px;
-    font-weight: bold;
-    text-transform: capitalize;
-    letter-spacing: 1px;
-    outline: none;
-    cursor: pointer;
-    width: 75%;
-}
+        input:focus::placeholder {
+            position: absolute;
+            font-size: 10px;
+            transform: translateY(-13px);
+        }
 
-form button:active {
-    background: #2c58fe;
-    transform: scale(0.995);
-}
+        form button {
+            border: none;
+            background: #043fff;
+            padding: 10px 0;
+            margin-top: 10px;
+            color: #fff;
+            border-radius: 3px;
+            font-weight: bold;
+            text-transform: capitalize;
+            letter-spacing: 1px;
+            outline: none;
+            cursor: pointer;
+        }
 
+        form button:active {
+            background: #2c58fe;
+            transform: scale(0.995);
+        }
+
+        input[type="button"] {
+            height: 35px;
+            /* 버튼의 높이를 50px로 설정 */
+        }
     </style>
     <script>
         if ('{{ msg }}'.length > 0) {
             alert('{{ msg }}');
         }
-        
+
         function check() {
             // pw1 = document.getElementById("pw1").value;
             // pw2 = document.getElementById("pw2").value;
@@ -126,37 +150,42 @@ form button:active {
         }
     </script>
 </head>
+
 <body>
-    회원가입 페이지.<br>
-    <form name="frm1" method="post">{% csrf_token %}
-        <table>
-            <tr>
-                <th>사용자 아이디</th>
-                <td><input type="text" name="username"></td>
-            </tr>
-            <tr>
-                <th>사용자 암호</th>
-                <td><input type="password" id="pw1" name="password"></td>
-            </tr>
-            <tr>
-                <th>사용자 암호 확인</th>
-                <td><input type="password" id="pw2" name="pwdch" onchange="check()"></td>
-            </tr>
-            <tr>
-                <th>이름</th>
-                <td><input type="text" name="first_name"></td>
-            </tr>
-            <tr>
-                <th>성</th>
-                <td><input type="text" name="last_name"></td>
-            </tr>
-            <tr>
-                <th>이메일</th>
-                <td><input type="email" name="email"></td>
-            </tr>
-        </table>
-        <hr>
-        <input type="button" onclick="pageSubmit()" value="회원가입">
-    </form>
+    <div class="container">
+        <div class="text" style="color:gray">회원가입하세요</div>
+        <div class="page">
+            <div class="title">헬스타그램</div>
+            <form name="frm1" method="post">
+                {% csrf_token %}
+                <div>
+                    <input type="text" id="username" name="username" placeholder="아이디">
+                </div>
+                <div>
+
+                    <input type="password" id="password" name="password" placeholder="비밀번호">
+                </div>
+                <div>
+
+                    <input type="password" id="pwdch" name="pwdch" onchange="check()" placeholder="비밀번호 확인">
+                </div>
+                <div>
+                    <input type="text" id="first_name" name="first_name" placeholder="성">
+                </div>
+                <div>
+                    <input type="text" id="last_name" name="last_name" placeholder="이름">
+                </div>
+                <div>
+                    <input type="email" id="email" name="email" placeholder="이메일">
+                </div>
+
+            </form>
+            <input type="button" onclick="pageSubmit()" value="회원가입" style="width: 68%;">
+            <div class="signup">
+                <a href='/' style="color:blueviolet;">목록으로</a>
+            </div>
+        </div>
+    </div>
 </body>
+
 </html>
