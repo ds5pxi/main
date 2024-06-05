@@ -39,6 +39,7 @@ def deleteFile(request, running_else_infoId, filename):
 def index(request, page):
     query = request.GET.get('query', '')
     search_by = request.GET.get('search_by', 'title')
+    post_by = request.GET.get('post_by', 'present')
 
     if search_by == 'title':
         running_else_info = Running_else_info.objects.filter(제목__icontains=query)
@@ -49,7 +50,12 @@ def index(request, page):
     else:
         running_else_info = Running_else_info.objects.all()
 
-    running_else_info = running_else_info.order_by('-id')
+    if post_by == 'present' :
+        running_else_info = running_else_info.order_by('-id')
+    elif post_by == 'like' :
+        running_else_info = running_else_info.order_by('-좋아요','-id')
+
+    best_border = Running_else_info.objects.order_by("-좋아요")
     
     # Paginator(데이터, 분할할 데이터 수)
     paging = Paginator(running_else_info, 8)
@@ -72,11 +78,13 @@ def index(request, page):
         content = {
             'running_else_info':paging.page(page),
             'page_num':page_num,
+            'best_border':best_border,
         }
     except:
         content = {
             'running_else_info':paging.page(paging.num_pages),
             'page_num':page_num,
+            'best_border':best_border,
         }
     return render(request,'information/running_else_info/index.html', content);
 

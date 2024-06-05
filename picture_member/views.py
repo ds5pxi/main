@@ -62,6 +62,7 @@ def get_queryset(request, self):
 def index(request, page):
     query = request.GET.get('query', '')
     search_by = request.GET.get('search_by', 'title')
+    post_by = request.GET.get('post_by', 'present')
 
     if search_by == 'title':
         picture_member = Picture_member.objects.filter(제목__icontains=query)
@@ -72,7 +73,12 @@ def index(request, page):
     else:
         picture_member = Picture_member.objects.all()
 
-    picture_member = picture_member.order_by('-id')
+    if post_by == 'present' :
+        picture_member = picture_member.order_by('-id')
+    elif post_by == 'like' :
+        picture_member = picture_member.order_by('-좋아요','-id')
+
+    best_border = Picture_member.objects.order_by("-좋아요")
     
     # Paginator(데이터, 분할할 데이터 수)
     paging = Paginator(picture_member, 8)
@@ -95,11 +101,13 @@ def index(request, page):
         content = {
             'picture_member':paging.page(page),
             'page_num':page_num,
+            'best_border':best_border,
         }
     except:
         content = {
             'picture_member':paging.page(paging.num_pages),
             'page_num':page_num,
+            'best_border':best_border,
         }
     return render(request, 'community/picture_member/index.html', content);
 

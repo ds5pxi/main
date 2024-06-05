@@ -36,6 +36,7 @@ def deleteFile(request, lower_infoId, filename):
 def index(request, page):
     query = request.GET.get('query', '')
     search_by = request.GET.get('search_by', 'title')
+    post_by = request.GET.get('post_by', 'present')
 
     if search_by == 'title':
         lower_info = Lower_info.objects.filter(제목__icontains=query)
@@ -46,7 +47,12 @@ def index(request, page):
     else:
         lower_info = Lower_info.objects.all()
 
-    lower_info = lower_info.order_by('-id')
+    if post_by == 'present' :
+        lower_info = lower_info.order_by('-id')
+    elif post_by == 'like' :
+        lower_info = lower_info.order_by('-좋아요','-id')
+
+    best_border = Lower_info.objects.order_by("-좋아요")
     
     # Paginator(데이터, 분할할 데이터 수)
     paging = Paginator(lower_info, 8)
@@ -69,11 +75,13 @@ def index(request, page):
         content = {
             'lower_info':paging.page(page),
             'page_num':page_num,
+            'best_border':best_border,
         }
     except:
         content = {
             'lower_info':paging.page(paging.num_pages),
             'page_num':page_num,
+            'best_border':best_border,
         }
     return render(request, 'information/lower_info/index.html', content);
 

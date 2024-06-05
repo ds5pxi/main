@@ -36,6 +36,7 @@ def deleteFile(request, diet_diaryId, filename):
 def index(request, page):
     query = request.GET.get('query', '')
     search_by = request.GET.get('search_by', 'title')
+    post_by = request.GET.get('post_by', 'present')
 
     if search_by == 'title':
         diet_diary = Diet_diary.objects.filter(제목__icontains=query)
@@ -46,7 +47,12 @@ def index(request, page):
     else:
         diet_diary = Diet_diary.objects.all()
 
-    diet_diary = diet_diary.order_by('-id')
+    if post_by == 'present' :
+        diet_diary = diet_diary.order_by('-id')
+    elif post_by == 'like' :
+        diet_diary = diet_diary.order_by('-좋아요','-id')
+
+    best_border = Diet_diary.objects.order_by("-좋아요")
     
     # Paginator(데이터, 분할할 데이터 수)
     paging = Paginator(diet_diary, 8)
@@ -69,11 +75,13 @@ def index(request, page):
         content = {
             'diet_diary':paging.page(page),
             'page_num':page_num,
+            'best_border':best_border,
         }
     except:
         content = {
             'diet_diary':paging.page(paging.num_pages),
             'page_num':page_num,
+            'best_border':best_border,
         }
     return render(request, 'community/diet_diary/index.html', content);
 

@@ -37,6 +37,7 @@ def deleteFile(request, stretch_infoId, filename):
 def index(request, page):
     query = request.GET.get('query', '')
     search_by = request.GET.get('search_by', 'title')
+    post_by = request.GET.get('post_by', 'present')
 
     if search_by == 'title':
         stretch_info = Stretch_info.objects.filter(제목__icontains=query)
@@ -47,7 +48,12 @@ def index(request, page):
     else:
         stretch_info = Stretch_info.objects.all()
 
-    stretch_info = stretch_info.order_by('-id')
+    if post_by == 'present' :
+        stretch_info = stretch_info.order_by('-id')
+    elif post_by == 'like' :
+        stretch_info = stretch_info.order_by('-좋아요','-id')
+
+    best_border = Stretch_info.objects.order_by("-좋아요")
     
     # Paginator(데이터, 분할할 데이터 수)
     paging = Paginator(stretch_info, 8)
@@ -70,11 +76,13 @@ def index(request, page):
         content = {
             'stretch_info':paging.page(page),
             'page_num':page_num,
+            'best_border':best_border,
         }
     except:
         content = {
             'stretch_info':paging.page(paging.num_pages),
             'page_num':page_num,
+            'best_border':best_border,
         }
     return render(request, 'information/stretch_info/index.html', content);
 

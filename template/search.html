@@ -15,22 +15,53 @@
         .btn-primary {
             white-space: nowrap;
             font-size: 1rem;
+            align-items: center;
+        }
+        .me-3{
+            margin-right: 480px;
+        }
+        .d-flex {
+            display: flex;
+            align-items: center;
+        }
+        .align-items-center {
+            align-items: center;
+        }
+        .justify-content-center {
+            justify-content: center;
+        }
+        .me-2 {
+            margin-right: 10px;
+        }
+        .order-select {
+            order: -1; /* 최신순, 좋아요순 옵션 칸을 왼쪽 끝으로 이동 */
+        }
+        .search-select {
+            margin: 0 auto; /* 제목, 작성자, 내용 옵션 칸을 중앙에 배치 */
         }
     </style>
 </head>
 <body>
-    <div class="d-flex justify-content-center mb-4">
-        <form method="get" action="" class="d-flex align-items-center">
-            <div class="me-2">
-                <select name="search_by" class="form-select form-select-lg" style="width: 150px;">
-                    <option value="title" {% if request.GET.search_by == 'title' %}selected{% endif %}>제목</option>
-                    <option value="author" {% if request.GET.search_by == 'author' %}selected{% endif %}>작성자</option>
-                    <option value="content" {% if request.GET.search_by == 'content' %}selected{% endif %}>내용</option>
-                </select>
-            </div>
-            <input type="text" name="query" class="form-control me-2" placeholder="검색어를 입력해주세요" value="{{ request.GET.query }}" style="width: 300px;">
-            <button type="submit" class="btn btn-primary btn-lg" style="white-space: nowrap;">검색</button>
-        </form>
-    </div>
+    <form method="get" action="" class="d-flex align-items-center" >
+        <div class="me-2 order-select">
+            <select name="post_by" class="form-select form-select-lg" style="width: 100px;" onchange="this.form.submit()">
+                <option value="present" {% if request.GET.post_by == 'present' %}selected{% endif %}>최신순</option>
+                <option value="like" {% if request.GET.post_by == 'like' %}selected{% endif %}>좋아요순</option>
+            </select>
+        </div>
+        <div class="me-2 search-select">
+            <select name="search_by" class="form-select form-select-lg" style="width: 100px;">
+                <option value="title" {% if request.GET.search_by == 'title' %}selected{% endif %}>제목</option>
+                <option value="author" {% if request.GET.search_by == 'author' %}selected{% endif %}>작성자</option>
+                <option value="content" {% if request.GET.search_by == 'content' %}selected{% endif %}>내용</option>
+            </select>
+        </div>
+        <div class="me-2">
+            <input type="text" name="query" class="form-control me-2" placeholder="검색어를 입력해주세요" value="{{ request.GET.query }}" style="width: 200px;">
+        </div>
+        <div class="me-2">
+            <button type="submit" class="btn btn-primary btn-lg" style="white-space: nowrap; margin-bottom: 20px;">검색</button>
+        </div>
+    </form>
 </body>
 </html>
