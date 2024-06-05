@@ -36,6 +36,7 @@ def deleteFile(request, center_qId, filename):
 def index(request, page):
     query = request.GET.get('query', '')
     search_by = request.GET.get('search_by', 'title')
+    post_by = request.GET.get('post_by', 'present')
 
     if search_by == 'title':
         center_q = Center_q.objects.filter(제목__icontains=query)
@@ -46,7 +47,12 @@ def index(request, page):
     else:
         center_q = Center_q.objects.all()
 
-    center_q = center_q.order_by('-id')
+    if post_by == 'present' :
+        center_q = center_q.order_by('-id')
+    elif post_by == 'like' :
+        center_q = center_q.order_by('-좋아요','-id')
+
+    best_border = Center_q.objects.order_by("-좋아요")
     
     # Paginator(데이터, 분할할 데이터 수)
     paging = Paginator(center_q, 8)
@@ -71,6 +77,7 @@ def index(request, page):
             'page_num':page_num,
             'query': query,
             'search_by': search_by,
+            'best_border':best_border,
         }
     except:
         content = {
@@ -78,6 +85,7 @@ def index(request, page):
             'page_num':page_num,
             'query': query,
             'search_by': search_by,
+            'best_border':best_border,
         }
     return render(request, 'QnA/center_q/index.html', content);
 
