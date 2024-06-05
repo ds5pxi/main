@@ -27,6 +27,21 @@
             font-size: 25px;
             font-family: 'Arial', sans-serif;
         }
+
+        .form-row-inline {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        .form-row-inline input {
+            width: 48%;
+            /* 두 버튼이 균등하게 배치되도록 설정 */
+        }
+        .form-row-inline a {
+            width: 48%;
+            /* 두 버튼이 균등하게 배치되도록 설정 */
+        }
     </style>
     <script>
         if ('{{ msg }}'.length > 0) {
@@ -105,14 +120,17 @@
                 </div>
                 <div class="form-row">
                     <button type="submit" value="회원수정"
-                        style="width: 262px; height: 36px; margin-bottom: 15px; margin-top: 15px;">회원수정
+                        style="width: 262px; height: 36px; margin-bottom: 15px; margin-top: 15px; font-size: 16px;">회원수정
                     </button>
                 </div>
                 <div class="form-row">
-                    <input type="reset" value="도르마무">
-                </div>
-                <div class="form-row">
                     <input type="button" value="회원탈퇴" onclick="myinfoDel()">
+                </div>
+                <div class="form-row-inline">
+                    <input type="reset" value="Dormammu">
+                    <a  href="/">
+                        <input type="button" value="취소" style="width: 126px;">
+                    </a>
                 </div>
             </form>
             <script>
