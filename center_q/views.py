@@ -192,7 +192,7 @@ def add(request):
         center_q.작성자 = request.user.username;
         center_q.작성일 = now
         center_q.수정일 = now
-        center_q.조회수 = request.POST['vcount']
+        center_q.조회수 = 0
         center_q.save()
 
         file_upload(request, center_q.id);

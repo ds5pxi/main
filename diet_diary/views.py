@@ -184,7 +184,7 @@ def add(request):
         diet_diary.작성자 = request.user.username;
         diet_diary.작성일 = now
         diet_diary.수정일 = now
-        diet_diary.조회수 = request.POST['vcount']
+        diet_diary.조회수 = 0
         diet_diary.save()
 
         file_upload(request, diet_diary.id);

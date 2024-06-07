@@ -179,7 +179,7 @@ def add(request):
         workout_q.작성자 = request.user.username
         workout_q.작성일 = now
         workout_q.수정일 = now
-        workout_q.조회수 = request.POST['vcount']
+        workout_q.조회수 = 0
         workout_q.save()
 
         file_upload(request, workout_q.id)

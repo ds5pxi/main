@@ -190,7 +190,7 @@ def add(request):
         upper_info.작성자 = request.user.username;
         upper_info.작성일 = now
         upper_info.수정일 = now
-        upper_info.조회수 = request.POST['vcount']
+        upper_info.조회수 = 0
         upper_info.save()
 
         file_upload(request, upper_info.id);

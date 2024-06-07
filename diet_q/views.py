@@ -192,7 +192,7 @@ def add(request):
         diet_q.작성자 = request.user.username;
         diet_q.작성일 = now
         diet_q.수정일 = now
-        diet_q.조회수 = request.POST['vcount']
+        diet_q.조회수 = 0
         diet_q.save()
 
         file_upload(request, diet_q.id);

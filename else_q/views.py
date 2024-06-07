@@ -186,7 +186,7 @@ def add(request):
         else_q.작성자 = request.user.username;
         else_q.작성일 = now
         else_q.수정일 = now
-        else_q.조회수 = request.POST['vcount']
+        else_q.조회수 = 0
         else_q.save()
 
         file_upload(request, else_q.id);

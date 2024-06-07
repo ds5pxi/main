@@ -185,7 +185,7 @@ def add(request):
         advice.작성자 = request.user.username;
         advice.작성일 = now
         advice.수정일 = now
-        advice.조회수 = request.POST['vcount']
+        advice.조회수 = 0
         advice.save()
 
         file_upload(request, advice.id);

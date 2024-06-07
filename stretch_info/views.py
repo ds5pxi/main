@@ -189,7 +189,7 @@ def add(request):
         stretch_info.작성자 = request.user.username;
         stretch_info.작성일 = now
         stretch_info.수정일 = now
-        stretch_info.조회수 = request.POST['vcount']
+        stretch_info.조회수 = 0
         stretch_info.save()
 
         file_upload(request, stretch_info.id);

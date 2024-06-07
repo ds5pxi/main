@@ -211,7 +211,7 @@ def add(request):
         picture_member.작성자 = request.user.username;
         picture_member.작성일 = now
         picture_member.수정일 = now
-        picture_member.조회수 = request.POST['vcount']
+        picture_member.조회수 = 0
         picture_member.save()
 
         file_upload(request, picture_member.id);

@@ -185,7 +185,7 @@ def add(request):
         machine_q.작성자 = request.user.username;
         machine_q.작성일 = now
         machine_q.수정일 = now
-        machine_q.조회수 = request.POST['vcount']
+        machine_q.조회수 = 0
         machine_q.save()
 
         file_upload(request, machine_q.id);

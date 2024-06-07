@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 import os
+from .my_settings import DATABASES
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -77,18 +78,18 @@ WSGI_APPLICATION = 'main.wsgi.application'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 # sqlite3 DB 사용
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 
 # mysql DB 사용
 # DATABASES = {
 #     'default':{
 #         'ENGINE' : 'django.db.backends.mysql', # mysql orm engine
-#         'NAME' : 'test', # DB 이름
+#         'NAME' : 'mydatabase', # DB 이름
 #         'USER' : 'root', # 사용자 이름
 #         'PASSWORD' : '1234', # 암호
 #         'HOST' : 'localhost', # 127.0.0.1, 서버 아이피 또는 도메인이름
@@ -146,9 +147,13 @@ USE_TZ = True
 STATIC_URL = 'static/'
 
 # 정적파일의 폴더 지정
+# 수정한 부분 BY 대근
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
+    BASE_DIR / "static",
 ]
+# STATICFILES_DIRS = [
+#     os.path.join(BASE_DIR, 'static'),
+# ]
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 

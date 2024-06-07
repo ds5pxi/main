@@ -184,7 +184,7 @@ def add(request):
         workout_diary.작성자 = request.user.username;
         workout_diary.작성일 = now
         workout_diary.수정일 = now
-        workout_diary.조회수 = request.POST['vcount']
+        workout_diary.조회수 = 0
         workout_diary.save()
 
         file_upload(request, workout_diary.id);

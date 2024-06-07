@@ -164,7 +164,7 @@ def add(request):
         border.작성자 = request.user.username;
         border.작성일 = now
         border.수정일 = now
-        border.조회수 = request.POST['vcount']
+        border.조회수 = 0
         border.save()
 
         file_upload(request, border.id);
