@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,100 +11,112 @@
     <style>
         /* Adjusted CSS styles with background image */
 
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            min-height: 100vh;
+            align-items: center;
+            justify-content: center;
+            background-size: cover;
+            background-image: url('{% static "시대꺼.jpg" %}');
+            background-repeat: no-repeat;
+            background-position: center;
+        }
 
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(255, 255, 255, 0.8);
+            /* Add some transparency to the background */
+            border-radius: 10px;
+            padding: 20px;
+        }
 
-.container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background-color: rgba(255, 255, 255, 0.8); /* Add some transparency to the background */
-    border-radius: 10px;
-    padding: 20px;
-}
+        .text {
+            color: #fff;
+            margin: 10px;
+            letter-spacing: 1px;
+        }
 
-.text {
-    color: #fff;
-    margin: 10px;
-    letter-spacing: 1px;
-}
+        .page {
+            width: 350px;
+            background: #fff;
+            border-radius: 5px;
+            padding-bottom: 15px;
+            margin-top: 20px;
+        }
 
-.page {
-    width: 350px;
-    background: #fff;
-    border-radius: 5px;
-    padding-bottom: 15px;
-    margin-top: 20px;
-}
+        .title {
+            padding: 30px 0;
+            text-transform: capitalize;
+            font-size: 25px;
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+        }
 
-.title {
-    padding: 30px 0;
-    text-transform: capitalize;
-    font-size: 25px;
-    font-family: 'Arial', sans-serif;
-    text-align: center;
-}
+        form {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-top: 20px;
+        }
 
-form {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    margin-top: 20px;
-}
+        form input {
+            margin-bottom: 15px;
+            border: 1px solid rgba(0, 0, 0, 0.4);
+            border-radius: 3px;
+            outline: none;
+            width: 75%;
+            box-sizing: border-box;
+            height: 35px;
+            font-size: 17px;
+            padding: 0 10px;
+        }
 
-form input {
-    margin-bottom: 15px;
-    border: 1px solid rgba(0, 0, 0, 0.4);
-    border-radius: 3px;
-    outline: none;
-    width: 75%;
-    box-sizing: border-box;
-    height: 35px;
-    font-size: 17px;
-    padding: 0 10px;
-}
+        form input:focus {
+            border: 1px solid rgba(0, 0, 0, 0.7);
+            background: #efefef;
+        }
 
-form input:focus {
-    border: 1px solid rgba(0, 0, 0, 0.7);
-    background: #efefef;
-}
+        input::placeholder {
+            font-weight: normal;
+            font-size: 13px;
+            transition: 0.3s ease;
+        }
 
-input::placeholder {
-    font-weight: normal;
-    font-size: 13px;
-    transition: 0.3s ease;
-}
+        input:focus::placeholder {
+            position: absolute;
+            font-size: 10px;
+            transform: translateY(-13px);
+        }
 
-input:focus::placeholder {
-    position: absolute;
-    font-size: 10px;
-    transform: translateY(-13px);
-}
+        form button {
+            border: none;
+            background: #043fff;
+            padding: 10px 0;
+            margin-top: 10px;
+            color: #fff;
+            border-radius: 3px;
+            font-weight: bold;
+            text-transform: capitalize;
+            letter-spacing: 1px;
+            outline: none;
+            cursor: pointer;
+            width: 75%;
+        }
 
-form button {
-    border: none;
-    background: #043fff;
-    padding: 10px 0;
-    margin-top: 10px;
-    color: #fff;
-    border-radius: 3px;
-    font-weight: bold;
-    text-transform: capitalize;
-    letter-spacing: 1px;
-    outline: none;
-    cursor: pointer;
-    width: 75%;
-}
-
-form button:active {
-    background: #2c58fe;
-    transform: scale(0.995);
-}
-
+        form button:active {
+            background: #2c58fe;
+            transform: scale(0.995);
+        }
     </style>
 </head>
+
 <body>
     <main>
         <div class="container">
@@ -124,4 +137,5 @@ form button:active {
         </div>
     </main>
 </body>
+
 </html>

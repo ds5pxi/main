@@ -5,7 +5,10 @@ body {
     min-height: 100vh;
     align-items: center;
     justify-content: center;
+<<<<<<< HEAD
     background-image: url('시대꺼.jpg');
+=======
+>>>>>>> 8567feb4a7bceae165e81e46ca6575313d84b76f
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
